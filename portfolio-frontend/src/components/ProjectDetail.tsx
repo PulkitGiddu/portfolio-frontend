@@ -26,22 +26,23 @@ const ProjectDetail = () => {
         const mockProjects: Project[] = [
             {
                 id: 1,
-                title: 'E-Commerce Platform',
-                category: 'WEB DEVELOPMENT',
-                description: 'A modern e-commerce platform built with React and Node.js, featuring real-time inventory management and seamless checkout experience.',
-                image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=1200',
-                technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'AWS'],
-                challenge: 'Building a scalable platform that could handle high traffic during sales events while maintaining performance.',
-                solution: 'Implemented microservices architecture with Redis caching and CDN integration for optimal performance.',
+                title: 'BOOKIT',
+                category: 'FULL STACK DEVELOPMENT',
+                description: 'The Advanced Meeting Room Booking System is a centralized enterprise-grade platform designed to optimize office meeting room utilization. It introduces a credit-based booking economy combined with Role-Based Access Control (RBAC) to ensure fair usage, eliminate scheduling conflicts, and enforce accountability through an automated and professional workflow.',
+                image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200',
+                technologies: ['React.js', 'Springboot', 'PostgreSQL', 'AWS'],
+                challenge: 'Building a scalable product that could handle high traffic during office times while maintaining performance and managing office meeting rooms effectively.',
+                solution: 'Implemented microservices architecture with Redis caching, rate limiting, security and CDN integration for optimal performance.',
                 results: [
-                    '300% increase in conversion rate',
-                    '99.9% uptime during peak sales',
-                    'Reduced page load time by 60%'
+                    '100% efficient resource usage in offices',
+                    'Provide clear role-based access and responsibilities',
+                    '99.9% uptime during peak usage',
+                    'Prevent double bookings and handle concurrent access safely'
                 ],
                 gallery: [
-                    'https://images.unsplash.com/photo-1557821552-17105176677c?w=800',
-                    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800',
-                    'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800'
+                    'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800', // Meeting room
+                    'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800', // Conference
+                    'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800'  // Dashboard concept
                 ]
             },
             {

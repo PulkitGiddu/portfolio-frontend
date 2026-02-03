@@ -23,7 +23,6 @@ const About = () => {
                         className="space-y-8"
                     >
                         <div>
-                            <p className="label-text text-gray-500 dark:text-gray-500 mb-4">ABOUT US,25</p>
                             <h2 className="mono-heading text-6xl md:text-7xl text-black dark:text-white leading-tight">
                                 ABOUT
                             </h2>

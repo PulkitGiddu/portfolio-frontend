@@ -22,10 +22,10 @@ const Projects = () => {
     const DEFAULT_PROJECTS: ProjectCard[] = [
         {
             id: 1,
-            title: 'BEYOND TIME',
-            label: 'ART DIRECTION',
-            image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=1000&fit=crop',
-            bgColor: 'from-burgundy-500 to-burgundy-600',
+            title: 'BOOKIT',
+            label: 'FULL STACK DEVELOPMENT',
+            image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1000&fit=crop', // Office/Meeting room image
+            bgColor: 'from-blue-600 to-blue-800',
             textColor: 'text-white',
         },
         {
@@ -101,8 +101,6 @@ const Projects = () => {
                     className="mb-16"
                 >
                     <h2 className="mono-heading text-6xl md:text-7xl mb-4 text-black dark:text-white">
-                        SELECTED
-                        <br />
                         WORKS
                     </h2>
                     <p className="text-gray-600 dark:text-gray-400 max-w-xl">

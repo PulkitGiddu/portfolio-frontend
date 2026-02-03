@@ -1,6 +1,9 @@
 import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 
+import bookitLogo from '../assets/bookit.png';
+import bet2learnLogo from '../assets/bet2learn.png';
+
 const Counter = ({ value, duration = 2 }: { value: number, duration?: number }) => {
     const ref = useRef(null);
     const inView = useInView(ref, { once: true });
@@ -20,20 +23,16 @@ const Clients = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-    // Placeholder client logos (you can replace with actual logos)
-    // Expanded client list for marquee effect
+    // Real client logos
     const clients = [
-        { name: 'OAKLEY', logo: 'https://via.placeholder.com/150x60/1a1a1a/ffffff?text=OAKLEY' },
-        { name: 'MERIDIAN', logo: 'https://via.placeholder.com/150x60/1a1a1a/ffffff?text=MERIDIAN' },
-        { name: 'WAVE STUDIOS', logo: 'https://via.placeholder.com/150x60/1a1a1a/ffffff?text=WAVE' },
-        { name: 'ARCH', logo: 'https://via.placeholder.com/150x60/1a1a1a/ffffff?text=ARCH' },
-        { name: 'TECH CO', logo: 'https://via.placeholder.com/150x60/1a1a1a/ffffff?text=TECH+CO' },
-        { name: 'DESIGN LAB', logo: 'https://via.placeholder.com/150x60/1a1a1a/ffffff?text=DESIGN+LAB' },
+        { name: 'BOOKIT', logo: bookitLogo },
+        { name: 'BET2LEARN', logo: bet2learnLogo },
+        { name: 'YOU?' },
     ];
 
-    // Split clients into two rows
-    const row1Clients = [...clients, ...clients, ...clients, ...clients];
-    const row2Clients = [...clients.reverse(), ...clients, ...clients, ...clients];
+    // Split clients into two rows - duplicated more times since we have fewer clients
+    const row1Clients = [...clients, ...clients, ...clients, ...clients, ...clients, ...clients];
+    const row2Clients = [...clients, ...clients, ...clients, ...clients, ...clients, ...clients];
 
     return (
         <section id="clients" className="relative py-20 bg-cream-50 dark:bg-dark-400" ref={ref}>
@@ -48,10 +47,7 @@ const Clients = () => {
                     <h2 className="mono-heading text-6xl md:text-7xl text-black dark:text-white mb-6">
                         CLIENTS
                     </h2>
-                    <p className="text-gray-600 dark:text-gray-400 max-w-2xl text-lg">
-                        At Magnetto, we collaborate with forward-thinking brands, startups,
-                        and industry leaders who dare to challenge the norm.
-                    </p>
+
                 </motion.div>
 
                 {/* Client Grid */}
@@ -73,11 +69,17 @@ const Clients = () => {
                                     key={`row1-${index}`}
                                     className="w-[280px] h-[140px] bg-white dark:bg-dark-300 rounded-[2rem] flex items-center justify-center p-8 hover:bg-cream-200 dark:hover:bg-dark-200 transition-all duration-300 cursor-pointer group shrink-0"
                                 >
-                                    <img
-                                        src={client.logo}
-                                        alt={client.name}
-                                        className="w-full h-auto object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-500 grayscale"
-                                    />
+                                    {client.name === 'YOU?' ? (
+                                        <div className="flex items-center justify-center h-full">
+                                            <span className="font-pixel text-4xl font-bold text-black dark:text-white group-hover:scale-110 transition-transform duration-300">YOU?</span>
+                                        </div>
+                                    ) : (
+                                        <img
+                                            src={client.logo}
+                                            alt={client.name}
+                                            className="w-full h-auto object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-500 grayscale"
+                                        />
+                                    )}
                                 </div>
                             ))}
                         </motion.div>
@@ -99,11 +101,17 @@ const Clients = () => {
                                     key={`row2-${index}`}
                                     className="w-[280px] h-[140px] bg-white dark:bg-dark-300 rounded-[2rem] flex items-center justify-center p-8 hover:bg-cream-200 dark:hover:bg-dark-200 transition-all duration-300 cursor-pointer group shrink-0"
                                 >
-                                    <img
-                                        src={client.logo}
-                                        alt={client.name}
-                                        className="w-full h-auto object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-500 grayscale"
-                                    />
+                                    {client.name === 'YOU?' ? (
+                                        <div className="flex items-center justify-center h-full">
+                                            <span className="font-pixel text-4xl font-bold text-black dark:text-white group-hover:scale-110 transition-transform duration-300">YOU?</span>
+                                        </div>
+                                    ) : (
+                                        <img
+                                            src={client.logo}
+                                            alt={client.name}
+                                            className="w-full h-auto object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-500 grayscale"
+                                        />
+                                    )}
                                 </div>
                             ))}
                         </motion.div>
@@ -127,7 +135,9 @@ const Clients = () => {
                             {[
                                 { number: '01', title: 'Strategy', desc: 'Digital strategy and brand positioning' },
                                 { number: '02', title: 'Design', desc: 'UI/UX and visual design' },
-                                { number: '03', title: 'Development', desc: 'Full-stack web development' },
+                                { number: '03', title: 'Website Development', desc: 'Full-stack web development' },
+                                { number: '04', title: 'Mobile App Development', desc: 'Android-IOS development' },
+                                { number: '05', title: 'Content Creation', desc: 'Content creation for social media and blogs' },
                             ].map((service, index) => (
                                 <motion.div
                                     key={service.number}

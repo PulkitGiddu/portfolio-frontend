@@ -88,7 +88,7 @@ const Contact = () => {
                             </h2>
                             <p className="text-lg text-white/70 max-w-md">
                                 Have a project in mind? Whether you're launching a brand, designing
-                                a product, or exploring your digital presence, we're here to bring
+                                a product, or exploring your digital presence, here to bring
                                 your vision to life.
                             </p>
                         </motion.div>
@@ -100,7 +100,7 @@ const Contact = () => {
                             transition={{ delay: 0.3, duration: 1 }}
                         >
                             <form onSubmit={handleSubmit} className="glass-card p-8 md:p-10 space-y-6 bg-black/40">
-                                <p className="label-text text-white/70 mb-6">CONTACT US,25</p>
+                                <p className="label-text text-white/70 mb-6">LET'S TALK</p>
 
                                 {/* Name Fields */}
                                 <div className="grid grid-cols-2 gap-4">
