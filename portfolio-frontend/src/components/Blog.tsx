@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { FaArrowRight, FaPlus, FaXmark as FaTimes, FaImage } from 'react-icons/fa6';
+import { FaArrowRight, FaXmark as FaTimes, FaImage } from 'react-icons/fa6';
 
 interface BlogPost {
     id: number;
