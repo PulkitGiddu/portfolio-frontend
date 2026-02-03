@@ -1,0 +1,35 @@
+# OS junk
+.DS_Store
+.tissues
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Java/Maven
+target/
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.local
+portfolio-backend/src/main/resources/application.properties

@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&family=Courier+Prime:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cream-50 text-gray-900 transition-colors duration-300;
+    font-family: 'Courier Prime', 'Space Mono', monospace;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* Dark mode override */
+  :global(.dark) body {
+    @apply bg-black text-gray-100;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Add scroll margin to sections for proper scroll positioning */
+  section {
+    scroll-margin-top: 2rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Courier Prime', 'Space Mono', monospace;
+  }
+}
+
+@layer components {
+
+  /* Bento card - extreme rounded corners */
+  .bento-card {
+    @apply rounded-6xl overflow-hidden;
+  }
+
+  /* Glass morphism card */
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-5xl;
+  }
+
+  /* Monospace heading */
+  .mono-heading {
+    @apply font-mono font-bold uppercase tracking-wider;
+  }
+
+  /* Button primary - white pill */
+  .btn-primary {
+    @apply px-8 py-4 bg-black text-white dark:bg-white dark:text-black rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 active:scale-95;
+  }
+
+  /* Button secondary - outlined pill */
+  .btn-secondary {
+    @apply px-8 py-4 border-2 border-black text-black dark:border-white dark:text-white rounded-full font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-500 hover:scale-105 active:scale-95;
+  }
+
+  /* Section container */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 py-20;
+  }
+
+  /* Small label */
+  .label-text {
+    @apply text-xs uppercase tracking-widest font-medium opacity-60;
+  }
+
+  /* Floating nav */
+  .floating-nav {
+    @apply fixed bottom-8 left-1/2 -translate-x-1/2 z-50;
+    @apply bg-white/10 backdrop-blur-lg rounded-full border border-white/20;
+    @apply px-6 py-3 shadow-2xl;
+  }
+}
+
+@layer utilities {
+
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-cream-50 dark:bg-black;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-800 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-700;
+  }
+
+  /* Text selection */
+  ::selection {
+    @apply bg-orange-500 text-white;
+  }
+}
+
+/* Image overlay effects */
+.image-overlay {
+  position: relative;
+}
+
+.image-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+  pointer-events: none;
+}
+
+/* Orange glow effect for About section */
+.orange-glow {
+  position: relative;
+}
+
+.orange-glow::before {
+  content: '';
+  position: absolute;
+  inset: -100px;
+  background: radial-gradient(circle at center, rgba(255, 140, 66, 0.3) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Burgundy gradient for Contact section */
+.bg-burgundy-gradient {
+  background: linear-gradient(135deg, rgba(139, 69, 19, 0.8) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.9) 100%);
+}
+
+/* Smooth transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+.mask-linear-gradient {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
