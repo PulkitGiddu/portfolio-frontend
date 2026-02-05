@@ -1,8 +1,6 @@
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FloatingNav from '../components/FloatingNav';
 import Blog from '../components/Blog';
-import { motion } from 'framer-motion';
 
 const Journal = () => {
     return (
