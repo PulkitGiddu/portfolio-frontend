@@ -1,6 +1,7 @@
 import FloatingNav from './FloatingNav';
 import Hero from './Hero';
 import About from './About';
+import Resume from './Resume';
 import Projects from './Projects';
 import Clients from './Clients';
 import Blog from './Blog';
@@ -14,6 +15,7 @@ const HomePage = () => {
             <main>
                 <Hero />
                 <About />
+                <Resume />
                 <Projects />
                 <Clients />
                 <Blog />

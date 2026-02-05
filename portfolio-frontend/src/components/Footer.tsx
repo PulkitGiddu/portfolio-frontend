@@ -125,7 +125,9 @@ const Footer = () => {
                     <p className="text-zinc-500 dark:text-zinc-600 text-xs font-mono">
                         © {currentTime.getFullYear()} PULKIT GIDDU. All rights reserved. •
                         <span className="ml-2 opacity-50">{currentTime.toLocaleTimeString()} IST</span>
-                        <a href="http://localhost:8081/oauth2/authorization/google" className="ml-4 opacity-10 hover:opacity-50">Admin</a>
+                        <a href="http://localhost:8081/oauth2/authorization/google" className="ml-4 opacity-50 hover:opacity-100 hover:text-teal-500 transition-opacity" title="Admin Login">
+                            Admin Access
+                        </a>
                     </p>
                 </div>
             </div>

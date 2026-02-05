@@ -36,22 +36,6 @@ const Projects = () => {
             bgColor: 'from-teal-500 to-teal-600',
             textColor: 'text-white',
         },
-        {
-            id: 3,
-            title: 'EVERY SECOND',
-            label: 'AD CAMPAIGN',
-            image: 'https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?w=800&h=1000&fit=crop',
-            bgColor: 'from-orange-500 to-orange-600',
-            textColor: 'text-white',
-        },
-        {
-            id: 4,
-            title: 'TIMELESS MASTERY',
-            label: 'ART DIRECTION',
-            image: 'https://images.unsplash.com/photo-1509909756405-be0199881695?w=800&h=1000&fit=crop',
-            bgColor: 'from-gray-800 to-gray-900',
-            textColor: 'text-white',
-        },
     ];
 
     const getBgColor = (index: number) => {
@@ -109,9 +93,9 @@ const Projects = () => {
                     </p>
                 </motion.div>
 
-                {/* Bento Grid */}
-                <div className="grid md:grid-cols-2 gap-6">
-                    {projects.map((project, index) => (
+                {/* Projects Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                    {projects.slice(0, 3).map((project, index) => (
                         <motion.div
                             key={project.id}
                             initial={{ opacity: 0, y: 40 }}
@@ -120,41 +104,34 @@ const Projects = () => {
                             className="group cursor-pointer"
                             onClick={() => navigate(`/project/${project.id}`)}
                         >
-                            <div className={`relative aspect-[4/5] bento-card overflow-hidden bg-gradient-to-br ${project.bgColor}`}>
+                            <div className="relative aspect-[3/4] overflow-hidden rounded-md bg-gray-900">
                                 {/* Background Image */}
                                 <img
                                     src={project.image}
                                     alt={project.title}
-                                    className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700"
+                                    className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out"
                                 />
 
-                                {/* Gradient Overlay */}
-                                <div className={`absolute inset-0 bg-gradient-to-br ${project.bgColor} opacity-80`} />
+                                {/* Subtle Gradient Overlay - Bottom only */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
 
-                                {/* Content - Centered with blur overlay */}
-                                <div className="relative h-full flex items-center justify-center p-8 md:p-12">
-                                    {/* Label at top-left */}
-                                    <p className={`absolute top-8 left-8 md:left-12 label-text ${project.textColor}`}>
+                                {/* Content - Clean bottom positioning */}
+                                <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                                    <p className="text-xs font-medium tracking-widest text-white/70 mb-2 uppercase">
                                         {project.label}
                                     </p>
-
-                                    {/* Centered blur overlay */}
-                                    <div className="bg-black/40 backdrop-blur-md rounded-3xl px-8 py-10 md:px-12 md:py-12 text-center max-w-md">
-                                        <h3 className="mono-heading text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-6">
+                                    <div className="flex justify-between items-end">
+                                        <h3 className="mono-heading text-2xl md:text-3xl text-white font-light">
                                             {project.title}
                                         </h3>
-                                        <motion.button
-                                            whileHover={{ scale: 1.05 }}
-                                            className="text-white text-sm font-medium inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 px-6 py-3 rounded-full transition-all duration-300"
+                                        <motion.div
+                                            whileHover={{ x: 5 }}
+                                            className="hidden group-hover:flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white"
                                         >
-                                            Explore More
-                                            <span className="text-lg">+</span>
-                                        </motion.button>
+                                            <span className="text-lg">→</span>
+                                        </motion.div>
                                     </div>
                                 </div>
-
-                                {/* Hover Effect */}
-                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                             </div>
                         </motion.div>
                     ))}
@@ -164,11 +141,15 @@ const Projects = () => {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={isInView ? { opacity: 1 } : {}}
-                    transition={{ delay: 0.8, duration: 1 }}
-                    className="mt-12 text-center"
+                    transition={{ delay: 0.6, duration: 1 }}
+                    className="mt-16 text-center"
                 >
-                    <button className="btn-primary">
-                        VIEW ALL PROJECTS
+                    <button
+                        className="group relative inline-flex items-center gap-3 px-8 py-4 bg-transparent border border-gray-300 dark:border-white/20 rounded-full text-sm font-medium tracking-widest text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300"
+                        onClick={() => navigate('/work')}
+                    >
+                        VIEW ALL WORKS
+                        <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
                     </button>
                 </motion.div>
             </div>

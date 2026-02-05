@@ -1,27 +1,52 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { FaSun, FaMoon } from 'react-icons/fa6';
 import mineImage from '../assets/mine.png';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const FloatingNav = () => {
     const { theme, toggleTheme } = useTheme();
     const [activeSection, setActiveSection] = useState('home');
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const navItems = [
         { id: 'home', label: 'HOME' },
         { id: 'about', label: 'ABOUT' },
+        { id: 'resume', label: 'RESUME' },
         { id: 'projects', label: 'PROJECTS' },
         { id: 'journal', label: 'JOURNAL' },
     ];
 
     const scrollToSection = (id: string) => {
         setActiveSection(id);
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+
+        if (id === 'journal') {
+            navigate('/journal');
+            return;
+        }
+
+        if (location.pathname !== '/') {
+            navigate('/');
+            // Wait for navigation then scroll
+            setTimeout(() => {
+                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        } else {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     const scrollToContact = () => {
-        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+        if (location.pathname !== '/') {
+            navigate('/');
+            setTimeout(() => {
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        } else {
+            document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     return (
