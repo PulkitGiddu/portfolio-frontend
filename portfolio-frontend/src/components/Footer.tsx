@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { ENDPOINTS } from '../config/api';
 import { FaXTwitter, FaInstagram, FaLinkedinIn, FaYoutube, FaGithub } from 'react-icons/fa6';
 import { SiLeetcode } from 'react-icons/si';
 
 const Footer = () => {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [socialLinks, setSocialLinks] = useState<any[]>([]);
+    const [viewCount, setViewCount] = useState<number | null>(null);
 
     const iconMap: any = {
         'FaXTwitter': FaXTwitter,
@@ -29,8 +31,22 @@ const Footer = () => {
             setCurrentTime(new Date());
         }, 1000);
 
+        // Fetch View Count
+        const fetchViewCount = async () => {
+            try {
+                const countRes = await fetch(ENDPOINTS.TRACKING_COUNT);
+                if (countRes.ok) {
+                    const count = await countRes.json();
+                    setViewCount(count);
+                }
+            } catch (error) {
+                console.error("View count fetch failed", error);
+            }
+        };
+        fetchViewCount();
+
         // Fetch social links
-        fetch('http://localhost:8081/api/social-links')
+        fetch(ENDPOINTS.SOCIAL_LINKS || 'http://localhost:8081/api/social-links')
             .then(res => res.json())
             .then(data => {
                 if (data && data.length > 0) {
@@ -125,9 +141,14 @@ const Footer = () => {
                     <p className="text-zinc-500 dark:text-zinc-600 text-xs font-mono">
                         © {currentTime.getFullYear()} PULKIT GIDDU. All rights reserved. •
                         <span className="ml-2 opacity-50">{currentTime.toLocaleTimeString()} IST</span>
-                        <a href="http://localhost:8081/oauth2/authorization/google" className="ml-4 opacity-50 hover:opacity-100 hover:text-teal-500 transition-opacity" title="Admin Login">
+                        <a href={ENDPOINTS.OAUTH2_GOOGLE} className="ml-4 opacity-50 hover:opacity-100 hover:text-teal-500 transition-opacity" title="Admin Login">
                             Admin Access
                         </a>
+                        {viewCount !== null && (
+                            <span className="ml-4 text-teal-500 font-mono text-xs border border-teal-500/30 px-2 py-0.5 rounded bg-teal-500/10">
+                                {viewCount.toLocaleString()} Views
+                            </span>
+                        )}
                     </p>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { FaPlus, FaSignOutAlt, FaTrash } from 'react-icons/fa';
+import { ENDPOINTS } from '../config/api';
+import { FaPlus, FaSignOutAlt, FaTrash, FaChartBar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
 interface BlogPost {
@@ -21,12 +22,29 @@ interface Project {
     tags: string;
 }
 
+interface AdminLog {
+    id: number;
+    email: string;
+    ipAddress: string;
+    timestamp: string;
+    status: string;
+}
+
+interface PageView {
+    id: number;
+    pagePath: string;
+    ipAddress: string;
+    userAgent: string;
+    timestamp: string;
+}
+
 const AdminDashboard = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
-    const [activeTab, setActiveTab] = useState<'blogs' | 'projects'>('blogs');
+    const [stats, setStats] = useState<{ adminLogs: AdminLog[], pageViews: PageView[] }>({ adminLogs: [], pageViews: [] });
+    const [activeTab, setActiveTab] = useState<'blogs' | 'projects' | 'stats'>('blogs');
 
     // Form State
     const [isCreating, setIsCreating] = useState(false);
@@ -41,12 +59,13 @@ const AdminDashboard = () => {
         if (isAdmin) {
             fetchPosts();
             fetchProjects();
+            fetchStats();
         }
     }, [isAdmin]);
 
     const checkAuth = async () => {
         try {
-            const res = await fetch('http://localhost:8081/api/auth/status', { credentials: 'include' });
+            const res = await fetch(ENDPOINTS.AUTH_STATUS, { credentials: 'include' });
             if (res.ok) {
                 const data = await res.json();
                 setIsAdmin(data.isAdmin);
@@ -60,7 +79,7 @@ const AdminDashboard = () => {
 
     const fetchPosts = async () => {
         try {
-            const res = await fetch('http://localhost:8081/api/blogs'); // Or a specific admin endpoint for all posts
+            const res = await fetch(ENDPOINTS.BLOGS);
             if (res.ok) {
                 const data = await res.json();
                 setPosts(data);
@@ -72,7 +91,7 @@ const AdminDashboard = () => {
 
     const fetchProjects = async () => {
         try {
-            const res = await fetch('http://localhost:8081/api/projects');
+            const res = await fetch(ENDPOINTS.PROJECTS);
             if (res.ok) {
                 const data = await res.json();
                 setProjects(data);
@@ -82,14 +101,26 @@ const AdminDashboard = () => {
         }
     };
 
+    const fetchStats = async () => {
+        try {
+            const res = await fetch(ENDPOINTS.TRACKING_STATS, { credentials: 'include' });
+            if (res.ok) {
+                const data = await res.json();
+                setStats(data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch stats', error);
+        }
+    };
+
     const handleLogin = () => {
-        window.location.href = 'http://localhost:8081/oauth2/authorization/google';
+        window.location.href = ENDPOINTS.OAUTH2_GOOGLE;
     };
 
     const handleCreatePost = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:8081/api/blogs', {
+            const res = await fetch(ENDPOINTS.BLOGS, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -123,7 +154,7 @@ const AdminDashboard = () => {
                 formData.append('image', newProject.image);
             }
 
-            const res = await fetch('http://localhost:8081/api/projects', {
+            const res = await fetch(ENDPOINTS.PROJECTS, {
                 method: 'POST',
                 credentials: 'include',
                 body: formData
@@ -146,7 +177,7 @@ const AdminDashboard = () => {
     const handleDeletePost = async (id: number) => {
         if (!confirm('Are you sure you want to delete this post?')) return;
         try {
-            const res = await fetch(`http://localhost:8081/api/blogs/${id}`, {
+            const res = await fetch(`${ENDPOINTS.BLOGS}/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -164,7 +195,7 @@ const AdminDashboard = () => {
     const handleDeleteProject = async (id: number) => {
         if (!confirm('Are you sure you want to delete this project?')) return;
         try {
-            const res = await fetch(`http://localhost:8081/api/projects/${id}`, {
+            const res = await fetch(`${ENDPOINTS.PROJECTS}/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -244,6 +275,13 @@ const AdminDashboard = () => {
                     >
                         Projects
                         {activeTab === 'projects' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-500" />}
+                    </button>
+                    <button
+                        onClick={() => { setActiveTab('stats'); setIsCreating(false); }}
+                        className={`pb-4 px-2 font-medium transition-colors relative ${activeTab === 'stats' ? 'text-teal-500' : 'text-gray-500 hover:text-white'}`}
+                    >
+                        Stats
+                        {activeTab === 'stats' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-500" />}
                     </button>
                 </div>
 

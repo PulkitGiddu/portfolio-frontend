@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
+import resumePdf from '../assets/SoftwareResume_Pulkit.pdf';
 import { FaDownload, FaBriefcase, FaGraduationCap, FaAward, FaCalendarAlt, FaCode, FaTools, FaDatabase, FaServer } from 'react-icons/fa';
 
 const Resume = () => {
@@ -11,36 +12,38 @@ const Resume = () => {
             title: 'Software Engineer',
             company: 'HSBC INDIA',
             period: 'July 2024 - Present',
-            description: 'Results-driven Software Engineer building and optimizing complex systems using Java, Spring Boot, Microservices, and Oracle.',
-            tags: ['Java', 'Spring Boot', 'Microservices', 'Oracle', 'React.js'],
+            description: 'Designed and maintained distributed microservices using Java 8+, Spring Boot, REST, powering mission-critical financial workflows with strict low-latency and high-availability SLAs.',
+            tags: ['Java', 'Spring Boot', 'Microservices', 'Oracle', 'React.js', 'Kafka', 'Redis'],
             achievements: [
-                'Implemented global microservice to integrate real-time interest rates for optimized currency mapping.',
-                'Developed a REST service for "soft dismissal" of production records, reducing RCOs by over 75%.',
-                'Created utility to verify system readiness saving 105 hours monthly while maintaining detailed documentation.',
-                'Utilized SonarIQ and Cyberflow for code quality validation, prioritizing issues through JIRA.',
-                'Designed and developed a UI Dashboard tracking production environments, improving productivity by 40%.',
-                'Engineered a new payment processing module to integrate RBI\'s Structured Financial Messaging System.',
-                'Managed end-to-end quarterly release management process, deploying 4 major releases with reduced incidents.'
+                'Integrated an asynchronous, message-queue–driven payment processing module with RBI’s Structured Financial Messaging System, enabling reliable high-volume transaction processing.',
+                'Translated regulatory and business requirements into automated validations and owned the design of a full-stack observability dashboard monitoring 40+ environments.',
+                'Led incident triage, root cause analysis, and production issue resolution, significantly reducing recurring operational defects (RCOs reduced by 75%).',
+                'Implemented Redis-based caching and preloading strategies for region/sub-region configuration lookups, eliminating repeated DB calls and reducing latency.',
+                'Created multi-level GST–CIBIL validation microservice ensuring regulatory compliance.',
+                'Managed quarterly release cycles, ensuring zero-downtime deployments and SLA adherence across distributed services.',
+                'Created a utility to verify downstream system readiness, saving 105 hours/month with detailed documentation.'
             ],
-            color: 'from-red-600 to-red-800' // HSBC Brand colors roughly
+            color: 'from-red-600 to-red-800'
         }
     ];
+
+
 
     const education = [
         {
             degree: 'B. Tech, Electronics & Telecommunication',
             institution: 'Vishwakarma Institute of Technology, Pune',
-            period: 'July 2024',
-            grade: 'CGPA: 8.05',
+            period: 'Nov 2020 - June 2024',
+            grade: 'CGPA: 8.03',
             color: 'from-blue-600 to-blue-800'
         }
     ];
 
     const skills = [
         { category: 'Languages', items: ['Java', 'C++', 'SQL (PL/SQL)', 'JavaScript'], icon: FaCode },
-        { category: 'Frameworks', items: ['React.js', 'Spring Boot', 'Microservices', 'Android', 'Kafka', 'Redis'], icon: FaServer },
-        { category: 'Tools', items: ['JIRA', 'GIT/GitHub', 'Jenkins', 'SonarIQ', 'Cyberflow', 'ServiceNow'], icon: FaTools },
-        { category: 'Databases', items: ['MySQL', 'Oracle', 'PostgreSQL'], icon: FaDatabase },
+        { category: 'Frameworks', items: ['Spring Boot', 'React.js', 'Android', 'Flutter', 'Kafka', 'JUnit'], icon: FaServer },
+        { category: 'Databases & Caching', items: ['MySQL', 'Oracle', 'PostgreSQL', 'Redis'], icon: FaDatabase },
+        { category: 'DevOps & Tools', items: ['Git/GitHub', 'Jenkins', 'JIRA', 'SonarQube', 'WinSCP', 'ServiceNow'], icon: FaTools },
     ];
 
     const achievements = [
@@ -104,8 +107,8 @@ const Resume = () => {
 
                         <motion.div variants={itemVariants} className="mt-8">
                             <motion.a
-                                href="/resume.pdf"
-                                download
+                                href={resumePdf}
+                                download="Pulkit_Giddu_Resume.pdf"
                                 className="inline-flex items-center gap-3 px-8 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-lg hover:shadow-xl"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
@@ -207,6 +210,8 @@ const Resume = () => {
                                     ))}
                                 </div>
                             </div>
+
+
                         </div>
 
                         {/* Right Column: Skills & Achievements */}
