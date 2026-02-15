@@ -41,7 +41,7 @@ const Blog = ({ className = "" }: BlogProps) => {
 
     const checkAuth = async () => {
         try {
-            const res = await fetch('http://localhost:8081/api/auth/status', { credentials: 'include' });
+            const res = await fetch('https://portfolio-backend-1-eng0.onrender.com/api/auth/status', { credentials: 'include' });
             if (res.ok) {
                 const data = await res.json();
                 setIsAdmin(data.admin);
@@ -53,7 +53,7 @@ const Blog = ({ className = "" }: BlogProps) => {
 
     const fetchPosts = async () => {
         try {
-            const res = await fetch('http://localhost:8081/api/blogs');
+            const res = await fetch('https://portfolio-backend-1-eng0.onrender.com/api/blogs');
             if (res.ok) {
                 const data = await res.json();
                 setPosts(data);
@@ -67,7 +67,7 @@ const Blog = ({ className = "" }: BlogProps) => {
 
     const handleCreatePost = async (data: any) => {
         try {
-            const res = await fetch('http://localhost:8081/api/blogs', {
+            const res = await fetch('https://portfolio-backend-1-eng0.onrender.com/api/blogs', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -178,7 +178,7 @@ const Blog = ({ className = "" }: BlogProps) => {
 
     const handleUpdatePost = async (id: number, data: any) => {
         try {
-            const res = await fetch(`http://localhost:8081/api/blogs/${id}`, {
+            const res = await fetch(`https://portfolio-backend-1-eng0.onrender.com/api/blogs/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -203,7 +203,7 @@ const Blog = ({ className = "" }: BlogProps) => {
         if (!window.confirm('Are you sure you want to delete this article? This cannot be undone.')) return;
 
         try {
-            const res = await fetch(`http://localhost:8081/api/blogs/${id}`, {
+            const res = await fetch(`https://portfolio-backend-1-eng0.onrender.com/api/blogs/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

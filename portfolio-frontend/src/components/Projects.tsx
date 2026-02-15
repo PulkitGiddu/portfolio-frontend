@@ -49,7 +49,7 @@ const Projects = () => {
     };
 
     useEffect(() => {
-        fetch('http://localhost:8081/api/projects')
+        fetch('https://portfolio-backend-1-eng0.onrender.com/api/projects')
             .then(res => res.json())
             .then(data => {
                 if (data && data.length > 0) {

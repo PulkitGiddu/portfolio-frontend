@@ -46,7 +46,7 @@ const Footer = () => {
         fetchViewCount();
 
         // Fetch social links
-        fetch(ENDPOINTS.SOCIAL_LINKS || 'http://localhost:8081/api/social-links')
+        fetch(ENDPOINTS.SOCIAL_LINKS || 'https://portfolio-backend-1-eng0.onrender.com/api/social-links')
             .then(res => res.json())
             .then(data => {
                 if (data && data.length > 0) {

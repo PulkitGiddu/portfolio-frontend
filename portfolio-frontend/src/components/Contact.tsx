@@ -28,7 +28,7 @@ const Contact = () => {
                 formDataToSend.append('voiceMemo', voiceBlob, 'voice-memo.webm');
             }
 
-            const response = await fetch('http://localhost:8081/api/contact', {
+            const response = await fetch('https://portfolio-backend-1-eng0.onrender.com/api/contact', {
                 method: 'POST',
                 body: formDataToSend, // Browser sets Content-Type with boundary
             });
