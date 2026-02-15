@@ -1,5 +1,5 @@
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api';
-const BACKEND_URL = import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') : 'http://localhost:8081';
+export const API_BASE_URL = 'https://portfolio-backend-1-eng0.onrender.com/api';
+const BACKEND_URL = 'https://portfolio-backend-1-eng0.onrender.com';
 
 export const ENDPOINTS = {
     AUTH_STATUS: `${API_BASE_URL}/auth/status`,
