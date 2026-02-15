@@ -20,3 +20,5 @@ portfolio-frontend/node_modules
 *.njsproj
 *.sln
 *.sw?
+.env
+.env.local
