@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ENDPOINTS } from '../config/api';
-import { FaPlus, FaSignOutAlt, FaTrash, FaChartBar } from 'react-icons/fa';
+import { FaPlus, FaSignOutAlt, FaTrash } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
 interface BlogPost {
@@ -22,28 +22,12 @@ interface Project {
     tags: string;
 }
 
-interface AdminLog {
-    id: number;
-    email: string;
-    ipAddress: string;
-    timestamp: string;
-    status: string;
-}
-
-interface PageView {
-    id: number;
-    pagePath: string;
-    ipAddress: string;
-    userAgent: string;
-    timestamp: string;
-}
 
 const AdminDashboard = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
-    const [stats, setStats] = useState<{ adminLogs: AdminLog[], pageViews: PageView[] }>({ adminLogs: [], pageViews: [] });
     const [activeTab, setActiveTab] = useState<'blogs' | 'projects' | 'stats'>('blogs');
 
     // Form State
@@ -59,7 +43,6 @@ const AdminDashboard = () => {
         if (isAdmin) {
             fetchPosts();
             fetchProjects();
-            fetchStats();
         }
     }, [isAdmin]);
 
@@ -101,17 +84,7 @@ const AdminDashboard = () => {
         }
     };
 
-    const fetchStats = async () => {
-        try {
-            const res = await fetch(ENDPOINTS.TRACKING_STATS, { credentials: 'include' });
-            if (res.ok) {
-                const data = await res.json();
-                setStats(data);
-            }
-        } catch (error) {
-            console.error('Failed to fetch stats', error);
-        }
-    };
+
 
     const handleLogin = () => {
         window.location.href = ENDPOINTS.OAUTH2_GOOGLE;
