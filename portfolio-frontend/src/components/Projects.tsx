@@ -65,6 +65,8 @@ const Projects = () => {
                     }));
                     setProjects(mappedProjects);
                 } else {
+                    // API returned empty array, show defaults
+                    console.log("No projects found in database, showing default projects");
                     setProjects(DEFAULT_PROJECTS);
                 }
             })
