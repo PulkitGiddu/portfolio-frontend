@@ -41,17 +41,6 @@ const WorkPage = () => {
         },
     ];
 
-    const getBgColor = (index: number) => {
-        const colors = [
-            'from-burgundy-500 to-burgundy-600',
-            'from-teal-500 to-teal-600',
-            'from-orange-500 to-orange-600',
-            'from-blue-600 to-blue-800',
-            'from-gray-800 to-gray-900'
-        ];
-        return colors[index % colors.length];
-    };
-
     useEffect(() => {
         // Fetch projects from API
         fetch(ENDPOINTS.PROJECTS)
