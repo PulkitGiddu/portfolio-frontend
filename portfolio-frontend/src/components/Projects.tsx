@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ENDPOINTS } from '../config/api';
 
 interface ProjectCard {
     id: number;
@@ -49,7 +50,7 @@ const Projects = () => {
     };
 
     useEffect(() => {
-        fetch('https://portfolio-backend-1-eng0.onrender.com/api/projects')
+        fetch(ENDPOINTS.PROJECTS)
             .then(res => res.json())
             .then(data => {
                 if (data && data.length > 0) {

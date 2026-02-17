@@ -3,6 +3,7 @@ import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { FaArrowRight, FaXmark as FaTimes, FaImage, FaPlus, FaPencil, FaTrash } from 'react-icons/fa6';
 import BlogForm from './BlogForm';
+import { ENDPOINTS, fetchWithCredentials } from '../config/api';
 
 interface BlogPost {
     id: number;
@@ -41,7 +42,7 @@ const Blog = ({ className = "" }: BlogProps) => {
 
     const checkAuth = async () => {
         try {
-            const res = await fetch('https://portfolio-backend-1-eng0.onrender.com/api/auth/status', { credentials: 'include' });
+            const res = await fetchWithCredentials(ENDPOINTS.AUTH_STATUS);
             if (res.ok) {
                 const data = await res.json();
                 setIsAdmin(data.admin);
@@ -53,7 +54,7 @@ const Blog = ({ className = "" }: BlogProps) => {
 
     const fetchPosts = async () => {
         try {
-            const res = await fetch('https://portfolio-backend-1-eng0.onrender.com/api/blogs');
+            const res = await fetch(ENDPOINTS.BLOGS);
             if (res.ok) {
                 const data = await res.json();
                 setPosts(data);
@@ -67,10 +68,9 @@ const Blog = ({ className = "" }: BlogProps) => {
 
     const handleCreatePost = async (data: any) => {
         try {
-            const res = await fetch('https://portfolio-backend-1-eng0.onrender.com/api/blogs', {
+            const res = await fetchWithCredentials(ENDPOINTS.BLOGS, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
                 body: JSON.stringify(data)
             });
 
@@ -178,10 +178,9 @@ const Blog = ({ className = "" }: BlogProps) => {
 
     const handleUpdatePost = async (id: number, data: any) => {
         try {
-            const res = await fetch(`https://portfolio-backend-1-eng0.onrender.com/api/blogs/${id}`, {
+            const res = await fetchWithCredentials(ENDPOINTS.BLOG_BY_ID(id), {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
                 body: JSON.stringify(data)
             });
 
@@ -203,9 +202,8 @@ const Blog = ({ className = "" }: BlogProps) => {
         if (!window.confirm('Are you sure you want to delete this article? This cannot be undone.')) return;
 
         try {
-            const res = await fetch(`https://portfolio-backend-1-eng0.onrender.com/api/blogs/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const res = await fetchWithCredentials(ENDPOINTS.BLOG_BY_ID(id), {
+                method: 'DELETE'
             });
 
             if (res.ok) {

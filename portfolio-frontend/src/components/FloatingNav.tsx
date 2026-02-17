@@ -15,7 +15,7 @@ const FloatingNav = () => {
         { id: 'home', label: 'HOME' },
         { id: 'about', label: 'ABOUT' },
         { id: 'resume', label: 'RESUME' },
-        { id: 'projects', label: 'PROJECTS' },
+        { id: 'work', label: 'WORK' },
         { id: 'journal', label: 'JOURNAL' },
     ];
 
@@ -24,6 +24,11 @@ const FloatingNav = () => {
 
         if (id === 'journal') {
             navigate('/journal');
+            return;
+        }
+
+        if (id === 'work') {
+            navigate('/work');
             return;
         }
 

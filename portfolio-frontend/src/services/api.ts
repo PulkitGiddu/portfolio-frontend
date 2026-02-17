@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 
-// Base API URL - change this for production
-const API_BASE_URL = 'https://portfolio-backend-1-eng0.onrender.com/api';
+// Use centralized API configuration
+
 
 const api = axios.create({
     baseURL: API_BASE_URL,

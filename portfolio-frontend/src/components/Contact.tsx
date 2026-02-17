@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import VoiceRecorder from './VoiceRecorder';
+import { ENDPOINTS } from '../config/api';
 
 const Contact = () => {
     const ref = useRef(null);
@@ -28,7 +29,7 @@ const Contact = () => {
                 formDataToSend.append('voiceMemo', voiceBlob, 'voice-memo.webm');
             }
 
-            const response = await fetch('https://portfolio-backend-1-eng0.onrender.com/api/contact', {
+            const response = await fetch(ENDPOINTS.CONTACT, {
                 method: 'POST',
                 body: formDataToSend, // Browser sets Content-Type with boundary
             });
