@@ -3,6 +3,7 @@ import { useRef, useEffect } from 'react';
 
 import bookitLogo from '../assets/bookit.png';
 import bet2learnLogo from '../assets/bet2learn.png';
+import snatchMartLogo from '../assets/snatchMart.png';
 
 const Counter = ({ value, duration = 2 }: { value: number, duration?: number }) => {
     const ref = useRef(null);
@@ -27,7 +28,7 @@ const Clients = () => {
     const clients = [
         { name: 'BOOKIT', logo: bookitLogo },
         { name: 'BET2LEARN', logo: bet2learnLogo },
-        { name: 'YOU?' },
+        { name: 'SNATCHMART', logo: snatchMartLogo }
     ];
 
     // Split clients into two rows - duplicated more times since we have fewer clients
@@ -172,7 +173,7 @@ const Clients = () => {
                         <div className="space-y-10">
                             <div>
                                 <div className="mono-heading text-7xl text-black dark:text-white mb-2 flex items-center">
-                                    <Counter value={7} />+
+                                    <Counter value={6} />+
                                 </div>
                                 <p className="text-gray-500 dark:text-gray-400">Extensive Industry Experience</p>
                             </div>
