@@ -249,7 +249,45 @@ const Blog = ({ className = "" }: BlogProps) => {
 
                 {/* Loading State */}
                 {isLoading && (
-                    <div className="text-center py-20 text-gray-500">Loading thoughts...</div>
+                    <div className="flex flex-col items-center justify-center py-24 px-4">
+                        {/* Pulsing dots animation */}
+                        <div className="flex gap-2 mb-8">
+                            {[0, 1, 2].map((i) => (
+                                <motion.div
+                                    key={i}
+                                    className="w-2.5 h-2.5 rounded-full bg-teal-500"
+                                    animate={{
+                                        scale: [1, 1.4, 1],
+                                        opacity: [0.4, 1, 0.4],
+                                    }}
+                                    transition={{
+                                        duration: 1.2,
+                                        repeat: Infinity,
+                                        delay: i * 0.2,
+                                        ease: 'easeInOut',
+                                    }}
+                                />
+                            ))}
+                        </div>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            className="font-mono text-sm tracking-wider text-gray-500 dark:text-gray-400 uppercase mb-3"
+                        >
+                            Fetching latest blog entries
+                        </motion.p>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                            className="text-gray-400 dark:text-gray-500 text-sm max-w-md text-center leading-relaxed"
+                        >
+                            Waking up the server — this may take a moment on the first visit. Hang tight!
+                        </motion.p>
+                    </div>
                 )}
 
                 {/* Blog Grid */}
