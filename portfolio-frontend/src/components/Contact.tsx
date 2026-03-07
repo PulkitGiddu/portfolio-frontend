@@ -31,7 +31,7 @@ const Contact = () => {
 
             const response = await fetch(ENDPOINTS.CONTACT, {
                 method: 'POST',
-                body: formDataToSend, // Browser sets Content-Type with boundary
+                body: formDataToSend,
             });
 
             if (response.ok) {
@@ -57,135 +57,161 @@ const Contact = () => {
         });
     };
 
+    const inputClass =
+        'w-full bg-transparent border-b border-gray-300 dark:border-gray-700 px-0 py-3 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:border-black dark:focus:border-white transition-colors text-sm';
+
     return (
-        <section id="contact" className="relative py-20 bg-cream-50 dark:bg-black overflow-hidden" ref={ref}>
-            {/* Background Image with rounded container */}
+        <section id="contact" className="relative py-24 bg-cream-50 dark:bg-black" ref={ref}>
             <div className="section-container">
-                <div className="relative rounded-6xl overflow-hidden">
-                    {/* Background Image */}
-                    <div className="absolute inset-0">
-                        <img
-                            src="https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?w=1920&h=1080&fit=crop"
-                            alt="Contact Background"
-                            className="w-full h-full object-cover"
-                        />
-                        {/* Dark overlay with red/burgundy tint */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-burgundy-900/80 via-black/70 to-black/90" />
-                    </div>
+                <div className="grid lg:grid-cols-2 gap-16 items-start">
+                    {/* Left Side - Text */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={isInView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ duration: 1 }}
+                        className="space-y-6"
+                    >
+                        <p className="label-text text-gray-400">CONTACT</p>
 
-                    {/* Content */}
-                    <div className="relative z-10 grid lg:grid-cols-2 gap-16 items-center p-12 md:p-20 min-h-[600px]">
-                        {/* Left Side - Text */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -30 }}
-                            animate={isInView ? { opacity: 1, x: 0 } : {}}
-                            transition={{ duration: 1 }}
-                            className="space-y-6"
-                        >
-                            <h2 className="mono-heading text-7xl md:text-8xl text-white leading-tight">
-                                GET IN
-                                <br />
-                                TOUCH
-                            </h2>
-                            <p className="text-lg text-white/70 max-w-md">
-                                Have a project in mind? Whether you're launching a brand, designing
-                                a product, or exploring your digital presence, here to bring
-                                your vision to life.
-                            </p>
-                        </motion.div>
+                        <h2 className="mono-heading text-6xl md:text-7xl text-black dark:text-white leading-tight">
+                            GET IN
+                            <br />
+                            TOUCH
+                        </h2>
 
-                        {/* Right Side - Form */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 30 }}
-                            animate={isInView ? { opacity: 1, x: 0 } : {}}
-                            transition={{ delay: 0.3, duration: 1 }}
-                        >
-                            <form onSubmit={handleSubmit} className="glass-card p-8 md:p-10 space-y-6 bg-black/40">
-                                <p className="label-text text-white/70 mb-6">LET'S TALK</p>
+                        <p className="text-lg text-gray-500 dark:text-gray-400 max-w-md leading-relaxed">
+                            Have a project in mind? Whether you're launching a brand, designing
+                            a product, or exploring your digital presence — let's build something
+                            great together.
+                        </p>
 
-                                {/* Name Fields */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm text-white/70 mb-2">First name</label>
-                                        <input
-                                            type="text"
-                                            name="firstName"
-                                            value={formData.firstName}
-                                            onChange={handleChange}
-                                            placeholder="John"
-                                            required
-                                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-white/40 transition-colors"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm text-white/70 mb-2">Last name</label>
-                                        <input
-                                            type="text"
-                                            name="lastName"
-                                            value={formData.lastName}
-                                            onChange={handleChange}
-                                            placeholder="Smith"
-                                            required
-                                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-white/40 transition-colors"
-                                        />
-                                    </div>
-                                </div>
+                    </motion.div>
 
-                                {/* Email and Phone */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm text-white/70 mb-2">Email</label>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            placeholder="jane@framer.com"
-                                            required
-                                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-white/40 transition-colors"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm text-white/70 mb-2">Phone no.</label>
-                                        <input
-                                            type="tel"
-                                            name="phone"
-                                            value={formData.phone}
-                                            onChange={handleChange}
-                                            placeholder="(+1)234-000-0000"
-                                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-white/40 transition-colors"
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Voice Recorder */}
+                    {/* Right Side - Form */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={isInView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ delay: 0.2, duration: 1 }}
+                    >
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            {/* Name Fields */}
+                            <div className="grid grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-sm text-white/70 mb-2">Voice Message (Optional)</label>
-                                    <VoiceRecorder
-                                        onRecordingComplete={setVoiceBlob}
-                                        onDelete={() => setVoiceBlob(null)}
+                                    <label className="block text-xs font-mono tracking-wider text-gray-400 dark:text-gray-500 mb-1 uppercase">
+                                        First name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        value={formData.firstName}
+                                        onChange={handleChange}
+
+                                        required
+                                        className={inputClass}
                                     />
                                 </div>
+                                <div>
+                                    <label className="block text-xs font-mono tracking-wider text-gray-400 dark:text-gray-500 mb-1 uppercase">
+                                        Last name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        value={formData.lastName}
+                                        onChange={handleChange}
 
-                                {/* Submit Button */}
-                                <button
-                                    type="submit"
-                                    disabled={status === 'sending'}
-                                    className="w-full bg-white text-black rounded-full py-4 font-semibold hover:bg-gray-100 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        required
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Email */}
+                            <div>
+                                <label className="block text-xs font-mono tracking-wider text-gray-400 dark:text-gray-500 mb-1 uppercase">
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+
+                                    required
+                                    className={inputClass}
+                                />
+                            </div>
+
+                            {/* Phone */}
+                            <div>
+                                <label className="block text-xs font-mono tracking-wider text-gray-400 dark:text-gray-500 mb-1 uppercase">
+                                    Phone (optional)
+                                </label>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+
+                                    className={inputClass}
+                                />
+                            </div>
+
+                            {/* Message */}
+                            <div>
+                                <label className="block text-xs font-mono tracking-wider text-gray-400 dark:text-gray-500 mb-1 uppercase">
+                                    Message
+                                </label>
+                                <textarea
+                                    name="message"
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    rows={2}
+                                    className="w-full bg-transparent border-b border-gray-300 dark:border-gray-700 px-0 py-3 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:border-black dark:focus:border-white transition-colors text-sm resize-none"
+                                />
+                            </div>
+
+                            {/* Voice Recorder */}
+                            <div>
+                                <label className="block text-xs font-mono tracking-wider text-gray-400 dark:text-gray-500 mb-2 uppercase">
+                                    Voice message
+                                </label>
+                                <VoiceRecorder
+                                    onRecordingComplete={setVoiceBlob}
+                                    onDelete={() => setVoiceBlob(null)}
+                                />
+                            </div>
+
+                            {/* Submit Button */}
+                            <button
+                                type="submit"
+                                disabled={status === 'sending'}
+                                className="w-full bg-black dark:bg-white text-white dark:text-black rounded-full py-4 font-mono text-sm tracking-wider uppercase hover:opacity-80 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                            >
+                                {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
+                            </button>
+
+                            {/* Status Messages */}
+                            {status === 'success' && (
+                                <motion.p
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="text-teal-500 text-center text-sm font-mono"
                                 >
-                                    {status === 'sending' ? 'SENDING...' : 'SUBMIT'}
-                                </button>
-
-                                {/* Status Messages */}
-                                {status === 'success' && (
-                                    <p className="text-green-400 text-center text-sm">Message sent successfully!</p>
-                                )}
-                                {status === 'error' && (
-                                    <p className="text-red-400 text-center text-sm">Failed to send message. Please try again.</p>
-                                )}
-                            </form>
-                        </motion.div>
-                    </div>
+                                    Message sent successfully!
+                                </motion.p>
+                            )}
+                            {status === 'error' && (
+                                <motion.p
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="text-red-500 text-center text-sm font-mono"
+                                >
+                                    Failed to send. Please try again.
+                                </motion.p>
+                            )}
+                        </form>
+                    </motion.div>
                 </div>
             </div>
         </section>

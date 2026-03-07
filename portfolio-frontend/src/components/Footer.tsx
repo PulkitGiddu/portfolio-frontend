@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ENDPOINTS } from '../config/api';
-import { FaXTwitter, FaInstagram, FaLinkedinIn, FaYoutube, FaGithub } from 'react-icons/fa6';
+import { FaInstagram, FaLinkedinIn, FaYoutube, FaGithub } from 'react-icons/fa6';
+import { HiOutlineMail } from 'react-icons/hi';
 import { SiLeetcode } from 'react-icons/si';
 
 const Footer = () => {
@@ -9,7 +10,7 @@ const Footer = () => {
     const [viewCount, setViewCount] = useState<number | null>(null);
 
     const iconMap: any = {
-        'FaXTwitter': FaXTwitter,
+        'HiOutlineMail': HiOutlineMail,
         'FaInstagram': FaInstagram,
         'FaLinkedinIn': FaLinkedinIn,
         'FaYoutube': FaYoutube,
@@ -18,7 +19,7 @@ const Footer = () => {
     };
 
     const DEFAULT_SOCIALS = [
-        { name: 'X', Icon: FaXTwitter, url: 'https://twitter.com' },
+        { name: 'Gmail', Icon: HiOutlineMail, url: 'mailto:pulkitgiddu09@gmail.com' },
         { name: 'Instagram', Icon: FaInstagram, url: 'https://www.instagram.com/pulkit.giddu/' },
         { name: 'LinkedIn', Icon: FaLinkedinIn, url: 'https://www.linkedin.com/in/pulkit-giddu-223780206/' },
         { name: 'YouTube', Icon: FaYoutube, url: 'https://www.youtube.com/@pulkitgiddu1568' },
