@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import RichTextEditor from './RichTextEditor';
 
 interface BlogFormProps {
     initialData?: {
@@ -59,59 +60,74 @@ const BlogForm: React.FC<BlogFormProps> = ({ initialData, onSubmit, onCancel }) 
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">Title</label>
-                        <input
-                            type="text"
-                            className="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus:border-teal-500 focus:outline-none transition-colors text-black dark:text-white"
-                            value={formData.title}
-                            onChange={e => setFormData({ ...formData, title: e.target.value })}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">Cover Image URL</label>
-                        <input
-                            type="text"
-                            className="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus:border-teal-500 focus:outline-none transition-colors text-black dark:text-white"
-                            value={formData.coverImageUrl}
-                            onChange={e => setFormData({ ...formData, coverImageUrl: e.target.value })}
-                            placeholder="https://..."
-                        />
-                    </div>
+                {/* Title — Medium-style large input */}
+                <div>
+                    <input
+                        type="text"
+                        className="w-full bg-transparent border-none text-3xl font-bold text-black dark:text-white placeholder-gray-400 focus:outline-none focus:ring-0 py-2"
+                        placeholder="Title"
+                        value={formData.title}
+                        onChange={e => setFormData({ ...formData, title: e.target.value })}
+                        required
+                    />
                 </div>
 
+                {/* Summary */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">Summary</label>
-                    <textarea
-                        className="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus:border-teal-500 focus:outline-none transition-colors text-black dark:text-white"
-                        rows={2}
+                    <input
+                        type="text"
+                        className="w-full bg-transparent border-none text-lg text-gray-600 dark:text-gray-400 placeholder-gray-400 focus:outline-none focus:ring-0 py-1"
+                        placeholder="Write a brief summary..."
                         value={formData.summary}
                         onChange={e => setFormData({ ...formData, summary: e.target.value })}
                     />
                 </div>
 
+                <hr className="border-gray-200 dark:border-gray-800" />
+
+                {/* Rich Text Editor */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">Content (Markdown)</label>
-                    <textarea
-                        className="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus:border-teal-500 focus:outline-none transition-colors font-mono text-sm text-black dark:text-white"
-                        rows={12}
-                        value={formData.content}
-                        onChange={e => setFormData({ ...formData, content: e.target.value })}
-                        required
+                    <RichTextEditor
+                        content={formData.content}
+                        onChange={(html) => setFormData({ ...formData, content: html })}
                     />
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">Tags</label>
-                    <input
-                        type="text"
-                        className="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus:border-teal-500 focus:outline-none transition-colors text-black dark:text-white"
-                        value={formData.tags}
-                        onChange={e => setFormData({ ...formData, tags: e.target.value })}
-                        placeholder="Tech, Life, Design"
-                    />
+                <hr className="border-gray-200 dark:border-gray-800" />
+
+                {/* Metadata Row */}
+                <div className="grid md:grid-cols-3 gap-4">
+                    <div>
+                        <label className="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">Cover Image URL</label>
+                        <input
+                            type="text"
+                            className="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus:border-teal-500 focus:outline-none transition-colors text-black dark:text-white text-sm"
+                            value={formData.coverImageUrl}
+                            onChange={e => setFormData({ ...formData, coverImageUrl: e.target.value })}
+                            placeholder="https://..."
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">Tags</label>
+                        <input
+                            type="text"
+                            className="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus:border-teal-500 focus:outline-none transition-colors text-black dark:text-white text-sm"
+                            value={formData.tags}
+                            onChange={e => setFormData({ ...formData, tags: e.target.value })}
+                            placeholder="Spring Boot, JWT, Security"
+                        />
+                    </div>
+                    <div className="flex items-end">
+                        <label className="flex items-center gap-3 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={formData.published}
+                                onChange={e => setFormData({ ...formData, published: e.target.checked })}
+                                className="w-5 h-5 rounded border-gray-300 text-teal-500 focus:ring-teal-500"
+                            />
+                            <span className="text-sm text-gray-400 uppercase tracking-wider font-medium">Published</span>
+                        </label>
+                    </div>
                 </div>
 
                 <div className="flex justify-end pt-4">

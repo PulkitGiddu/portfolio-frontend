@@ -5,6 +5,7 @@ import HomePage from './components/HomePage';
 import ProjectDetail from './components/ProjectDetail';
 import AdminDashboard from './pages/AdminDashboard';
 import Journal from './pages/Journal';
+import ArticlePage from './pages/ArticlePage';
 import WorkPage from './pages/WorkPage';
 import './index.css';
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/work" element={<WorkPage />} />
         <Route path="/project/:id" element={<ProjectDetail />} />
         <Route path="/journal" element={<Journal />} />
+        <Route path="/journal/:slug" element={<ArticlePage />} />
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </div>

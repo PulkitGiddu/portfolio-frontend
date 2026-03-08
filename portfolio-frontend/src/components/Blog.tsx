@@ -1,9 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaArrowRight, FaXmark as FaTimes, FaImage, FaPlus, FaPencil, FaTrash } from 'react-icons/fa6';
 import BlogForm from './BlogForm';
 import { ENDPOINTS, fetchWithCredentials } from '../config/api';
+import '../styles/editor.css';
 
 interface BlogPost {
     id: number;
@@ -24,6 +26,7 @@ interface BlogProps {
 const Blog = ({ className = "" }: BlogProps) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-100px' });
+    const navigate = useNavigate();
 
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -144,9 +147,10 @@ const Blog = ({ className = "" }: BlogProps) => {
                     {selectedPost?.title}
                 </h2>
 
-                <div className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 leading-relaxed text-lg whitespace-pre-wrap font-sans">
-                    {selectedPost?.content}
-                </div>
+                <div
+                    className="article-content"
+                    dangerouslySetInnerHTML={{ __html: selectedPost?.content || '' }}
+                />
             </motion.div>
         </div>
     );
@@ -325,7 +329,7 @@ const Blog = ({ className = "" }: BlogProps) => {
                                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                                 transition={{ delay: index * 0.1 + 0.2, duration: 0.8 }}
                                 className="group cursor-pointer flex flex-col h-full"
-                                onClick={() => setSelectedPost(post)}
+                                onClick={() => navigate(`/journal/${post.slug}`)}
                             >
                                 <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gray-200 dark:bg-gray-800 mb-6 relative">
                                     {post.coverImageUrl ? (

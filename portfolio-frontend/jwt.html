@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT in Spring Boot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #222;
+            line-height: 1.7;
+            background: #fff;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #333;
+            padding-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            margin-top: 40px;
+            border-left: 4px solid #333;
+            padding-left: 10px;
+        }
+
+        h3 {
+            font-size: 1rem;
+            margin-top: 24px;
+            color: #444;
+        }
+
+        p,
+        li {
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.88rem;
+            font-family: monospace;
+        }
+
+        pre {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 16px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin: 16px 0;
+        }
+
+        th {
+            background: #f0f0f0;
+            text-align: left;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+        }
+
+        td {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        .flow {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin: 16px 0;
+            font-size: 0.85rem;
+        }
+
+        .box {
+            background: #f0f0f0;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            padding: 6px 12px;
+            text-align: center;
+            font-size: 0.82rem;
+        }
+
+        .arrow {
+            color: #888;
+            font-size: 1.1rem;
+            padding: 0 2px;
+        }
+
+        .note {
+            background: #fffbe6;
+            border-left: 4px solid #f0c040;
+            padding: 10px 14px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        .warn {
+            background: #fff0f0;
+            border-left: 4px solid #e05050;
+            padding: 10px 14px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        .good {
+            background: #f0fff4;
+            border-left: 4px solid #40a060;
+            padding: 10px 14px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 40px 0;
+        }
+
+        .toc {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 16px 20px;
+            border-radius: 4px;
+            margin-bottom: 32px;
+        }
+
+        .toc a {
+            color: #1a6bb5;
+            text-decoration: none;
+            display: block;
+            margin: 4px 0;
+            font-size: 0.9rem;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .step-list {
+            counter-reset: steps;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .step-list li {
+            counter-increment: steps;
+            padding: 8px 0 8px 40px;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+
+        .step-list li::before {
+            content: counter(steps);
+            position: absolute;
+            left: 0;
+            background: #333;
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 12px;
+            font-weight: bold;
+            top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>JWT Authentication in Spring Boot</h1>
+    <p>A complete guide covering what JWT is, how it works, all the components involved, and how to implement it from
+        scratch.</p>
+
+    <div class="toc">
+        <strong>Contents</strong>
+        <a href="#what-is-jwt">1. What is JWT?</a>
+        <a href="#token-structure">2. Token Structure</a>
+        <a href="#high-level">3. High-Level Architecture</a>
+        <a href="#auth-flow">4. Authentication Flow (Login)</a>
+        <a href="#authz-flow">5. Authorization Flow (Protected Requests)</a>
+        <a href="#components">6. All Components Explained</a>
+        <a href="#code">7. Code Examples</a>
+        <a href="#security">8. Security Best Practices</a>
+    </div>
+
+    <h2 id="what-is-jwt">1. What is JWT?</h2>
+
+    <p>JWT (JSON Web Token) is a way to securely transmit information between a client and server as a compact,
+        self-contained string. Once the server issues a JWT, the client sends it with every request — the server just
+        validates it without needing to store any session data.</p>
+
+    <ul>
+        <li><strong>Stateless</strong> — the server stores nothing; all info is inside the token</li>
+        <li><strong>Self-contained</strong> — the token carries user info (username, roles)</li>
+        <li><strong>Signed</strong> — tamper-proof; server verifies the signature on every request</li>
+    </ul>
+
+    <div class="note">
+        <strong>Simple analogy:</strong> Think of JWT like a hotel key card. The hotel (server) issues it at check-in
+        (login). Every time you use it to open a door (API call), the door just checks if the card is valid — no need to
+        call the front desk every time.
+    </div>
+
+    <h2 id="token-structure">2. Token Structure</h2>
+
+    <p>A JWT is three Base64-encoded parts separated by dots:</p>
+
+    <pre>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9         &lt;-- Header
+.
+eyJzdWIiOiJhbGljZSIsInJvbGVzIjpbIlVTRVIiXSwiZXhwIjoxNzAwMDAzNjAwfQ  &lt;-- Payload
+.
+SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c  &lt;-- Signature</pre>
+
+    <h3>Part 1 — Header</h3>
+    <p>Describes the token type and signing algorithm.</p>
+    <pre>{
+  "alg": "HS256",   // algorithm used to sign
+  "typ": "JWT"
+}</pre>
+
+    <h3>Part 2 — Payload (Claims)</h3>
+    <p>Contains the actual data (who the user is, when it expires, etc.).</p>
+    <pre>{
+  "sub": "alice",             // subject = username
+  "roles": ["ROLE_USER"],     // user's roles
+  "iat": 1700000000,          // issued at (unix timestamp)
+  "exp": 1700003600           // expires at (1 hour later)
+}</pre>
+
+    <div class="warn">
+        <strong>Important:</strong> The payload is only Base64-encoded, NOT encrypted. Anyone can decode it. Never put
+        passwords, credit cards, or sensitive data in the payload.
+    </div>
+
+    <h3>Part 3 — Signature</h3>
+    <p>This is how the server verifies the token was not tampered with.</p>
+    <pre>HMACSHA256(
+  base64(header) + "." + base64(payload),
+  secretKey
+)</pre>
+    <p>If someone modifies the payload (e.g. changes their role to ADMIN), the signature won't match and the server
+        rejects the token.</p>
+
+    <h2 id="high-level">3. High-Level Architecture</h2>
+
+    <p>Here is how the layers fit together in a Spring Boot app:</p>
+
+    <pre>
++----------------------------------------------------------+
+|                  CLIENT (Browser / App)                  |
++----------------------------------------------------------+
+                         |
+              HTTP Request (with or without token)
+                         |
+                         v
++----------------------------------------------------------+
+|           SPRING SECURITY FILTER CHAIN                   |
+|     JwtAuthenticationFilter  ->  other filters ...       |
++----------------------------------------------------------+
+                         |
+                         v
++----------------------------------------------------------+
+|                   CONTROLLER LAYER                       |
+|          AuthController  /  UserController               |
++----------------------------------------------------------+
+                         |
+                         v
++----------------------------------------------------------+
+|                    SERVICE LAYER                         |
+|    JwtService    AuthenticationService    UserService    |
++----------------------------------------------------------+
+                         |
+                         v
++----------------------------------------------------------+
+|               REPOSITORY / DATABASE                      |
+|         UserRepository  ->  MySQL / PostgreSQL            |
++----------------------------------------------------------+
+</pre>
+
+    <p><strong>Key configuration files:</strong></p>
+    <ul>
+        <li><code>SecurityConfig.java</code> — defines which routes are public, which are protected, adds the JWT filter
+        </li>
+        <li><code>application.yml</code> — stores the JWT secret key and expiry time</li>
+    </ul>
+
+    <h2 id="auth-flow">4. Authentication Flow (Login)</h2>
+
+    <p>What happens when a user logs in for the first time:</p>
+
+    <div class="flow">
+        <div class="box">Client<br>POST /auth/login<br>{user, pass}</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">AuthController</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">AuthenticationManager</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">UserDetailsService<br>(load from DB)</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">BCrypt<br>password check</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">JwtService<br>generateToken()</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">Client gets<br>{ token }</div>
+    </div>
+
+    <p>Step-by-step breakdown:</p>
+    <ol class="step-list">
+        <li><strong>Client sends credentials</strong> — POST /api/auth/login with
+            <code>{ "username": "alice", "password": "secret" }</code></li>
+        <li><strong>AuthController receives request</strong> — delegates to AuthenticationService</li>
+        <li><strong>AuthenticationManager.authenticate()</strong> — creates a
+            <code>UsernamePasswordAuthenticationToken</code> and hands it to the provider</li>
+        <li><strong>DaoAuthenticationProvider</strong> — calls <code>UserDetailsService.loadUserByUsername()</code> to
+            fetch user from DB, then uses <code>BCryptPasswordEncoder</code> to compare passwords</li>
+        <li><strong>If credentials match</strong> — JwtService builds the token with claims (sub, roles, iat, exp) and
+            signs it</li>
+        <li><strong>Response sent to client</strong> — <code>{ "accessToken": "eyJ..." }</code></li>
+        <li><strong>Client stores the token</strong> — in memory or an httpOnly cookie</li>
+    </ol>
+
+    <h2 id="authz-flow">5. Authorization Flow (Protected Requests)</h2>
+
+    <p>What happens on every subsequent request after login:</p>
+
+    <div class="flow">
+        <div class="box">Client<br>GET /api/data<br>Authorization: Bearer &lt;token&gt;</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">JwtAuthenticationFilter</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">Extract token<br>from header</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">JwtService<br>validate token</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">Set<br>SecurityContext</div>
+        <span class="arrow">-&gt;</span>
+        <div class="box">Controller<br>handles request</div>
+    </div>
+
+    <ol class="step-list">
+        <li><strong>Client sends request with header</strong> — <code>Authorization: Bearer eyJhbGci...</code></li>
+        <li><strong>JwtAuthenticationFilter intercepts</strong> — this runs before every request. It reads the
+            Authorization header and strips the "Bearer " prefix</li>
+        <li><strong>Extract username from token</strong> — <code>jwtService.extractUsername(token)</code> parses the JWT
+            and reads the <code>sub</code> claim</li>
+        <li><strong>Check SecurityContext is empty</strong> — if the user is already authenticated this request, skip.
+            Otherwise continue.</li>
+        <li><strong>Load user from DB</strong> — <code>userDetailsService.loadUserByUsername()</code> fetches fresh user
+            data</li>
+        <li><strong>Validate the token</strong> — checks: username matches, token is not expired, signature is valid
+        </li>
+        <li><strong>Set authentication in SecurityContext</strong> — creates
+            <code>UsernamePasswordAuthenticationToken</code> with the user's roles and puts it in
+            <code>SecurityContextHolder</code></li>
+        <li><strong>Request proceeds to Controller</strong> — Spring Security sees the authenticated user, evaluates
+            <code>@PreAuthorize</code> annotations, and allows the request through</li>
+    </ol>
+
+    <div class="note">
+        <strong>Why does every request re-validate the token?</strong><br>
+        Because JWT is stateless — the server holds no session. The SecurityContext is cleared after every request. The
+        JWT IS the session.
+    </div>
+
+    <h2 id="components">6. All Components Explained</h2>
+
+    <table>
+        <tr>
+            <th>Class / Component</th>
+            <th>What it does</th>
+            <th>Key methods</th>
+        </tr>
+        <tr>
+            <td><code>JwtService</code></td>
+            <td>Generates tokens, validates tokens, extracts claims from tokens</td>
+            <td>generateToken(), isTokenValid(), extractUsername()</td>
+        </tr>
+        <tr>
+            <td><code>JwtAuthenticationFilter</code></td>
+            <td>Runs on every request. Extracts JWT from the Authorization header, validates it, and sets the
+                authentication in SecurityContext</td>
+            <td>doFilterInternal()</td>
+        </tr>
+        <tr>
+            <td><code>SecurityConfig</code></td>
+            <td>Configures which routes are public vs protected. Adds the JWT filter. Disables sessions. Wires up beans.
+            </td>
+            <td>securityFilterChain()</td>
+        </tr>
+        <tr>
+            <td><code>UserDetailsService</code></td>
+            <td>Spring Security interface. Your implementation loads the user from the database by username/email</td>
+            <td>loadUserByUsername()</td>
+        </tr>
+        <tr>
+            <td><code>AuthController</code></td>
+            <td>REST controller that exposes /auth/login and /auth/register endpoints</td>
+            <td>login(), register()</td>
+        </tr>
+        <tr>
+            <td><code>AuthenticationService</code></td>
+            <td>Business logic for login and registration. Calls AuthenticationManager and JwtService</td>
+            <td>authenticate(), register()</td>
+        </tr>
+        <tr>
+            <td><code>AuthenticationManager</code></td>
+            <td>Spring Security bean that delegates credential verification to the AuthenticationProvider</td>
+            <td>authenticate()</td>
+        </tr>
+        <tr>
+            <td><code>DaoAuthenticationProvider</code></td>
+            <td>Built-in Spring class. Uses UserDetailsService to fetch user and PasswordEncoder to compare passwords
+            </td>
+            <td>(auto-used by AuthManager)</td>
+        </tr>
+        <tr>
+            <td><code>PasswordEncoder</code></td>
+            <td>BCrypt hashing. Hashes passwords on register, compares on login</td>
+            <td>encode(), matches()</td>
+        </tr>
+        <tr>
+            <td><code>SecurityContextHolder</code></td>
+            <td>Thread-local storage for the current authenticated user. Cleared after every request.</td>
+            <td>getContext(), setAuthentication()</td>
+        </tr>
+        <tr>
+            <td><code>User</code> (Entity)</td>
+            <td>JPA entity that also implements <code>UserDetails</code>. Stored in DB, used by Spring Security.</td>
+            <td>getAuthorities(), getUsername()</td>
+        </tr>
+    </table>
+
+    <h2 id="code">7. Code Examples</h2>
+
+    <h3>application.yml</h3>
+    <pre>application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000       # 24 hours in milliseconds</pre>
+
+    <h3>pom.xml dependencies</h3>
+    <pre>&lt;!-- Spring Security --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;!-- JJWT library --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+  &lt;artifactId&gt;jjwt-api&lt;/artifactId&gt;
+  &lt;version&gt;0.12.3&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+  &lt;artifactId&gt;jjwt-impl&lt;/artifactId&gt;
+  &lt;version&gt;0.12.3&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+  &lt;artifactId&gt;jjwt-jackson&lt;/artifactId&gt;
+  &lt;version&gt;0.12.3&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+
+    <h3>User.java — Entity that implements UserDetails</h3>
+    <pre>@Entity
+@Table(name = "users")
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
+public class User implements UserDetails {
+
+    @Id @GeneratedValue
+    private Integer id;
+    private String firstName;
+    private String lastName;
+
+    @Column(unique = true)
+    private String email;       // used as the username
+    private String password;    // BCrypt hashed
+
+    @Enumerated(EnumType.STRING)
+    private Role role;          // USER or ADMIN
+
+    // Spring Security requires these methods:
+
+    @Override
+    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() { return email; }
+
+    @Override public boolean isAccountNonExpired() { return true; }
+    @Override public boolean isAccountNonLocked()  { return true; }
+    @Override public boolean isEnabled()           { return true; }
+}
+
+public enum Role { USER, ADMIN }</pre>
+
+    <h3>JwtService.java — Token generation and validation</h3>
+    <pre>@Service
+public class JwtService {
+
+    @Value("${application.security.jwt.secret-key}")
+    private String secretKey;
+
+    @Value("${application.security.jwt.expiration}")
+    private long jwtExpiration;
+
+    // Extract the username (subject) from a token
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    // Generate a token for a user
+    public String generateToken(UserDetails userDetails) {
+        return Jwts.builder()
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSignInKey(), Jwts.SIG.HS256)
+                .compact();
+    }
+
+    // Check if the token is valid (correct user + not expired)
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractClaim(token, Claims::getExpiration).before(new Date());
+    }
+
+    private &lt;T&gt; T extractClaim(String token, Function&lt;Claims, T&gt; resolver) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return resolver.apply(claims);
+    }
+
+    private SecretKey getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+}</pre>
+
+    <h3>JwtAuthenticationFilter.java — Runs on every request</h3>
+    <pre>@Component
+@RequiredArgsConstructor
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
+
+        // 1. Read the Authorization header
+        final String authHeader = request.getHeader("Authorization");
+
+        // 2. If no token, skip (public endpoints pass through, protected ones get 403)
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 3. Extract the token (remove "Bearer " prefix)
+        final String jwt = authHeader.substring(7);
+        final String username = jwtService.extractUsername(jwt);
+
+        // 4. If username found and user not yet authenticated this request
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            // 5. Validate the token
+            if (jwtService.isTokenValid(jwt, userDetails)) {
+
+                // 6. Create auth token and set in SecurityContext
+                UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,                           // no credentials needed post-auth
+                        userDetails.getAuthorities()    // roles
+                    );
+                authToken.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+
+        // 7. Continue the filter chain
+        filterChain.doFilter(request, response);
+    }
+}</pre>
+
+    <h3>SecurityConfig.java — Wire everything together</h3>
+    <pre>@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity   // enables @PreAuthorize on controllers
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final UserDetailsService userDetailsService;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(AbstractHttpConfigurer::disable)  // not needed for stateless JWT
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()   // login/register = public
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()                  // everything else needs token
+            )
+            .sessionManagement(sess ->
+                sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no sessions!
+            )
+            .authenticationProvider(authenticationProvider())
+            // JWT filter runs BEFORE Spring's default username/password filter
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
+    }
+}</pre>
+
+    <h3>AuthController.java — Login and Register endpoints</h3>
+    <pre>@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthenticationService authService;
+
+    @PostMapping("/register")
+    public ResponseEntity&lt;AuthResponse&gt; register(@RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity&lt;AuthResponse&gt; login(@RequestBody AuthRequest request) {
+        return ResponseEntity.ok(authService.authenticate(request));
+    }
+}
+
+// DTOs
+record AuthRequest(String email, String password) {}
+record RegisterRequest(String firstName, String lastName, String email, String password) {}
+record AuthResponse(String accessToken) {}</pre>
+
+    <h3>AuthenticationService.java — Business logic</h3>
+    <pre>@Service
+@RequiredArgsConstructor
+public class AuthenticationService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+
+    public AuthResponse register(RegisterRequest request) {
+        var user = User.builder()
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .role(Role.USER)
+                .build();
+        userRepository.save(user);
+        var token = jwtService.generateToken(user);
+        return new AuthResponse(token);
+    }
+
+    public AuthResponse authenticate(AuthRequest request) {
+        // Throws BadCredentialsException if wrong password
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.email(), request.password())
+        );
+        var user = userRepository.findByEmail(request.email()).orElseThrow();
+        var token = jwtService.generateToken(user);
+        return new AuthResponse(token);
+    }
+}</pre>
+
+    <h3>Using @PreAuthorize on protected endpoints</h3>
+    <pre>@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity&lt;String&gt; getMe(Authentication auth) {
+        return ResponseEntity.ok("Hello, " + auth.getName());
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity&lt;List&lt;User&gt;&gt; getAllUsers() {
+        // admin only
+    }
+}</pre>
+
+    <h2 id="security">8. Security Best Practices</h2>
+
+    <table>
+        <tr>
+            <th>Topic</th>
+            <th>Recommendation</th>
+        </tr>
+        <tr>
+            <td>Secret key length</td>
+            <td>Use at least 32 characters (256 bits). Generate with: <code>openssl rand -hex 32</code></td>
+        </tr>
+        <tr>
+            <td>Token expiry</td>
+            <td>Access token: 15 min. Refresh token: 7 days. Never use "no expiry".</td>
+        </tr>
+        <tr>
+            <td>Token storage</td>
+            <td>Use httpOnly cookies (safe from XSS). Avoid localStorage — any JS on the page can read it.</td>
+        </tr>
+        <tr>
+            <td>Payload contents</td>
+            <td>Only store non-sensitive data (username, roles). Never store passwords or PII.</td>
+        </tr>
+        <tr>
+            <td>Secret key location</td>
+            <td>Never hardcode in source code. Use environment variables or a secrets manager.</td>
+        </tr>
+        <tr>
+            <td>Algorithm</td>
+            <td>HS256 is fine for single apps. Use RS256 for microservices (share public key only).</td>
+        </tr>
+        <tr>
+            <td>Logout / revocation</td>
+            <td>JWT cannot be invalidated early by default. Use a Redis blacklist to support proper logout.</td>
+        </tr>
+        <tr>
+            <td>HTTPS</td>
+            <td>Always use HTTPS in production. A JWT sent over plain HTTP can be stolen in transit.</td>
+        </tr>
+    </table>
+
+    <div class="warn">
+        <strong>Common mistake:</strong> Setting token expiry to 30 days or more "for convenience". If a token is
+        stolen, the attacker has 30 days of access. Use short-lived access tokens + refresh tokens instead.
+    </div>
+
+    <div class="good">
+        <strong>Refresh Token Pattern:</strong> Access token expires in 15 min. Client sends refresh token to POST
+        /auth/refresh. Server issues a new access token. This way tokens are short-lived but users stay logged in.
+    </div>
+
+    <hr>
+    <p style="color:#888;font-size:0.85rem">Guide covers Spring Boot 3.x with JJWT 0.12.x</p>
+
+</body>
+
+</html>
