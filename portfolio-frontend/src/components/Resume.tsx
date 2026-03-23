@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import resumePdf from '../assets/SoftwareResume_Pulkit.pdf';
+import resumePdf from '../assets/SoftwareResume_Pulkit1.pdf';
 import { FaDownload, FaBriefcase, FaGraduationCap, FaAward, FaCalendarAlt, FaCode, FaTools, FaDatabase, FaServer } from 'react-icons/fa';
 
 const Resume = () => {
