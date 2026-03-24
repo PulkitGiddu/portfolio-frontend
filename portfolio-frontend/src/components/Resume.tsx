@@ -1,11 +1,12 @@
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { useRef, useState } from 'react';
 import resumePdf from '../assets/SoftwareResume_Pulkit1.pdf';
-import { FaDownload, FaBriefcase, FaGraduationCap, FaAward, FaCalendarAlt, FaCode, FaTools, FaDatabase, FaServer } from 'react-icons/fa';
+import { FaDownload, FaBriefcase, FaGraduationCap, FaAward, FaCalendarAlt, FaCode, FaTools, FaDatabase, FaServer, FaEye, FaTimes } from 'react-icons/fa';
 
 const Resume = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-100px' });
+    const [isViewerOpen, setIsViewerOpen] = useState(false);
 
     const experience = [
         {
@@ -15,7 +16,7 @@ const Resume = () => {
             description: 'Designed and maintained distributed microservices using Java 8+, Spring Boot, REST, powering mission-critical financial workflows with strict low-latency and high-availability SLAs.',
             tags: ['Java', 'Spring Boot', 'Microservices', 'Oracle', 'React.js', 'Kafka', 'Redis'],
             achievements: [
-                'Integrated an asynchronous, message-queue–driven payment processing module with RBI’s Structured Financial Messaging System, enabling reliable high-volume transaction processing.',
+                'Integrated an asynchronous, message-queue–driven payment processing module with RBI\'s Structured Financial Messaging System, enabling reliable high-volume transaction processing.',
                 'Translated regulatory and business requirements into automated validations and owned the design of a full-stack observability dashboard monitoring 40+ environments.',
                 'Led incident triage, root cause analysis, and production issue resolution, significantly reducing recurring operational defects (RCOs reduced by 75%).',
                 'Implemented Redis-based caching and preloading strategies for region/sub-region configuration lookups, eliminating repeated DB calls and reducing latency.',
@@ -71,6 +72,54 @@ const Resume = () => {
 
     return (
         <section id="resume" className="relative py-24 bg-cream-50 dark:bg-black overflow-hidden" ref={ref}>
+            {/* PDF Viewer Overlay */}
+            <AnimatePresence>
+                {isViewerOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex flex-col"
+                    >
+                        {/* Top bar with close button */}
+                        <div className="flex items-center justify-between px-6 py-4 bg-black/90 border-b border-white/10">
+                            <h3 className="text-white font-bold text-lg tracking-wide">Resume — Pulkit Giddu</h3>
+                            <div className="flex items-center gap-4">
+                                <motion.a
+                                    href={resumePdf}
+                                    download="Pulkit_Giddu_Resume.pdf"
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <FaDownload className="text-xs" />
+                                    Download
+                                </motion.a>
+                                <motion.button
+                                    onClick={() => setIsViewerOpen(false)}
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/80 hover:bg-red-500 text-white rounded-lg text-sm font-bold transition-colors"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <FaTimes />
+                                    Close
+                                </motion.button>
+                            </div>
+                        </div>
+
+                        {/* PDF iframe */}
+                        <div className="flex-1 p-4">
+                            <iframe
+                                src={`${resumePdf}#toolbar=0`}
+                                className="w-full h-full rounded-xl border border-white/10"
+                                title="Resume Viewer"
+                            />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Background elements */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute top-20 right-[5%] w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-float-slow" />
@@ -105,7 +154,7 @@ const Resume = () => {
                             Adept at building and optimizing complex systems using Java, Spring Boot, Microservices, and Oracle.
                         </motion.p>
 
-                        <motion.div variants={itemVariants} className="mt-8">
+                        <motion.div variants={itemVariants} className="mt-8 flex flex-wrap items-center justify-center gap-4">
                             <motion.a
                                 href={resumePdf}
                                 download="Pulkit_Giddu_Resume.pdf"
@@ -116,6 +165,15 @@ const Resume = () => {
                                 <FaDownload />
                                 DOWNLOAD RESUME
                             </motion.a>
+                            <motion.button
+                                onClick={() => setIsViewerOpen(true)}
+                                className="inline-flex items-center gap-3 px-8 py-4 bg-transparent border-2 border-black dark:border-white text-black dark:text-white rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-lg hover:shadow-xl hover:bg-black/5 dark:hover:bg-white/5"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <FaEye />
+                                VIEW RESUME
+                            </motion.button>
                         </motion.div>
                     </div>
 
