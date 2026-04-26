@@ -4,6 +4,7 @@ import { useRef, useEffect } from 'react';
 import bookitLogo from '../assets/bookit.png';
 import bet2learnLogo from '../assets/bet2learn.png';
 import snatchMartLogo from '../assets/snatchMart.png';
+import winqlyLogo from '../assets/winqlybg.png';
 
 const Counter = ({ value, duration = 2 }: { value: number, duration?: number }) => {
     const ref = useRef(null);
@@ -28,12 +29,12 @@ const Clients = () => {
     const clients = [
         { name: 'BOOKIT', logo: bookitLogo },
         { name: 'BET2LEARN', logo: bet2learnLogo },
-        { name: 'SNATCHMART', logo: snatchMartLogo }
+        { name: 'SNATCHMART', logo: snatchMartLogo },
+        { name: 'WINQLY', logo: winqlyLogo }
     ];
 
-    // Split clients into two rows - duplicated more times since we have fewer clients
-    const row1Clients = [...clients, ...clients, ...clients, ...clients, ...clients, ...clients];
-    const row2Clients = [...clients, ...clients, ...clients, ...clients, ...clients, ...clients];
+    // Duplicate clients for seamless marquee
+    const marqueeClients = [...clients, ...clients, ...clients, ...clients, ...clients, ...clients, ...clients, ...clients];
 
     return (
         <section id="clients" className="relative py-20 bg-cream-50 dark:bg-dark-400" ref={ref}>
@@ -52,23 +53,24 @@ const Clients = () => {
                 </motion.div>
 
                 {/* Client Grid */}
-                {/* Animated Client Rows */}
-                <div className="space-y-8 py-8 overflow-hidden">
-                    {/* Row 1 - Left to Right */}
+                {/* Animated Client Row */}
+                <div className="py-16 overflow-hidden">
                     <div className="relative w-full flex overflow-hidden mask-linear-gradient">
                         <motion.div
-                            className="flex gap-6 whitespace-nowrap"
-                            animate={{ x: ['-50%', '0%'] }}
+                            className="flex items-center gap-16 md:gap-24 whitespace-nowrap w-max"
+                            initial={{ x: 0 }}
+                            animate={{ x: "-50%" }}
                             transition={{
-                                duration: 20,
+                                duration: 30,
                                 ease: "linear",
                                 repeat: Infinity,
+                                repeatType: "loop",
                             }}
                         >
-                            {row1Clients.map((client, index) => (
+                            {marqueeClients.map((client, index) => (
                                 <div
-                                    key={`row1-${index}`}
-                                    className="w-[280px] h-[140px] bg-white dark:bg-dark-300 rounded-[2rem] flex items-center justify-center p-8 hover:bg-cream-200 dark:hover:bg-dark-200 transition-all duration-300 cursor-pointer group shrink-0"
+                                    key={`client-${index}`}
+                                    className="flex items-center justify-center cursor-pointer group shrink-0"
                                 >
                                     {client.name === 'YOU?' ? (
                                         <div className="flex items-center justify-center h-full">
@@ -78,39 +80,7 @@ const Clients = () => {
                                         <img
                                             src={client.logo}
                                             alt={client.name}
-                                            className="w-full h-auto object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-500 grayscale"
-                                        />
-                                    )}
-                                </div>
-                            ))}
-                        </motion.div>
-                    </div>
-
-                    {/* Row 2 - Right to Left */}
-                    <div className="relative w-full flex overflow-hidden mask-linear-gradient">
-                        <motion.div
-                            className="flex gap-6 whitespace-nowrap"
-                            animate={{ x: ['0%', '-50%'] }}
-                            transition={{
-                                duration: 20,
-                                ease: "linear",
-                                repeat: Infinity,
-                            }}
-                        >
-                            {row2Clients.map((client, index) => (
-                                <div
-                                    key={`row2-${index}`}
-                                    className="w-[280px] h-[140px] bg-white dark:bg-dark-300 rounded-[2rem] flex items-center justify-center p-8 hover:bg-cream-200 dark:hover:bg-dark-200 transition-all duration-300 cursor-pointer group shrink-0"
-                                >
-                                    {client.name === 'YOU?' ? (
-                                        <div className="flex items-center justify-center h-full">
-                                            <span className="font-pixel text-4xl font-bold text-black dark:text-white group-hover:scale-110 transition-transform duration-300">YOU?</span>
-                                        </div>
-                                    ) : (
-                                        <img
-                                            src={client.logo}
-                                            alt={client.name}
-                                            className="w-full h-auto object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-500 grayscale"
+                                            className="h-10 md:h-14 w-auto object-contain opacity-50 group-hover:opacity-100 transition-all duration-500 grayscale group-hover:grayscale-0"
                                         />
                                     )}
                                 </div>
@@ -126,9 +96,9 @@ const Clients = () => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ delay: 0.6, duration: 0.8 }}
-                        className="bg-white dark:bg-dark-300 rounded-5xl p-12"
+                        className="bg-white dark:bg-dark-300 rounded-5xl p-12 flex flex-col h-full"
                     >
-                        <h3 className="mono-heading text-4xl text-black dark:text-white mb-8">
+                        <h3 className="mono-heading text-4xl text-black dark:text-white mb-12">
                             SERVICES
                         </h3>
 
@@ -164,7 +134,7 @@ const Clients = () => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ delay: 0.7, duration: 0.8 }}
-                        className="bg-white dark:bg-dark-300 rounded-5xl p-12 flex flex-col justify-center"
+                        className="bg-white dark:bg-dark-300 rounded-5xl p-12 flex flex-col h-full"
                     >
                         <h3 className="mono-heading text-4xl text-black dark:text-white mb-12">
                             MILESTONES
