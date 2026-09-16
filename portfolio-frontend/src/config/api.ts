@@ -23,9 +23,6 @@ export const ENDPOINTS = {
     // Projects
     PROJECTS: `${API_BASE_URL}/projects`,
 
-    // Contact
-    CONTACT: `${API_BASE_URL}/contact`,
-
     // Tracking
     TRACKING_VIEW: `${API_BASE_URL}/tracking/view`,
     TRACKING_STATS: `${API_BASE_URL}/tracking/stats`,
