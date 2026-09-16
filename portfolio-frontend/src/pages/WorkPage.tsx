@@ -146,7 +146,7 @@ const WorkPage = () => {
                                 onClick={() => navigate('/#contact')}
                                 className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-full text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-all duration-300 hover:scale-105 flex items-center gap-2"
                             >
-                                CONTACT <span className="text-lg leading-none">+</span>
+                                BOOK A CALL <span className="text-lg leading-none">+</span>
                             </button>
                         </div>
                     </div>
