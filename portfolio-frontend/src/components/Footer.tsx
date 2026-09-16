@@ -20,9 +20,9 @@ const Footer = () => {
 
     const DEFAULT_SOCIALS = [
         { name: 'Gmail', Icon: HiOutlineMail, url: 'mailto:pulkitgiddu09@gmail.com' },
-        { name: 'Instagram', Icon: FaInstagram, url: 'https://www.instagram.com/pulkit.giddu/' },
+        { name: 'Instagram', Icon: FaInstagram, url: 'https://www.instagram.com/wynklo_tech/?hl=en' },
         { name: 'LinkedIn', Icon: FaLinkedinIn, url: 'https://www.linkedin.com/in/pulkit-giddu-223780206/' },
-        { name: 'YouTube', Icon: FaYoutube, url: 'https://www.youtube.com/@pulkitgiddu1568' },
+        { name: 'YouTube', Icon: FaYoutube, url: '' },
         { name: 'GitHub', Icon: FaGithub, url: 'https://github.com/PulkitGiddu' },
         { name: 'LeetCode', Icon: SiLeetcode, url: 'https://leetcode.com/u/PulkitGiddu/' },
     ];
@@ -74,7 +74,7 @@ const Footer = () => {
         { name: 'About', href: '#about', count: '' },
         { name: 'Projects', href: '#projects', count: '(06)' },
         { name: 'Journal', href: '#journal', count: '(05)' },
-        { name: 'Contact us', href: '#contact', count: '' },
+        { name: 'Book a Call', href: '#contact', count: '' },
     ];
 
     const currentLinks = socialLinks.length > 0 ? socialLinks : DEFAULT_SOCIALS;
