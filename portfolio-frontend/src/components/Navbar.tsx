@@ -13,7 +13,7 @@ const Navbar = () => {
         { name: 'Projects', href: '#projects' },
         { name: 'Profiles', href: '#coding-profiles' },
         { name: 'Blog', href: '#blog' },
-        { name: 'Contact', href: '#contact' },
+        { name: 'Book a Call', href: '#contact' },
     ];
 
     useEffect(() => {
