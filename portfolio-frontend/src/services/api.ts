@@ -32,14 +32,4 @@ export const blogAPI = {
     deleteBlog: (id: number) => api.delete(`/blogs/${id}`),
 };
 
-// Contact API
-export const contactAPI = {
-    // Submit contact form
-    submitContact: (contactData: { name: string; email: string; message: string }) =>
-        api.post('/contact', contactData),
-
-    // Quick talk notification
-    quickTalk: () => api.post('/contact/quick-talk'),
-};
-
 export default api;
