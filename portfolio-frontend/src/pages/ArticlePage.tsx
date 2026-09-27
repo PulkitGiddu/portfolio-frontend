@@ -116,7 +116,7 @@ const Article = ({ post }: { post: BlogPost }) => {
                 dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
-            <div className="mt-16 border-t border-white/[0.08] pt-8">
+            <div className="mt-16 border-t border-line/10 pt-8">
                 <Link to="/journal">
                     <TextLink>More notes</TextLink>
                 </Link>
