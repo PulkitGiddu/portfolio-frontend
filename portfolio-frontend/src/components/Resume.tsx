@@ -58,7 +58,7 @@ const Resume = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                     >
-                        <div className="flex items-center justify-between border-b border-white/[0.08] px-6 py-4">
+                        <div className="flex items-center justify-between border-b border-line/10 px-6 py-4">
                             <p className="text-sm text-paper">Resume — Pulkit Giddu</p>
                             <div className="flex items-center gap-5">
                                 <a href={resumePdf} download="Pulkit_Giddu_Resume.pdf" className="text-sm text-mute hover:text-paper">
@@ -69,14 +69,14 @@ const Resume = () => {
                                 </button>
                             </div>
                         </div>
-                        <iframe title="Resume" src={`${resumePdf}#toolbar=0`} className="m-4 min-h-0 flex-1 border border-white/[0.08]" />
+                        <iframe title="Resume" src={`${resumePdf}#toolbar=0`} className="m-4 min-h-0 flex-1 border border-line/10" />
                     </motion.div>
                 )}
             </AnimatePresence>
 
             <div className="grid gap-16 lg:grid-cols-12">
                 <div className="lg:col-span-7">
-                    <article className="border-t border-white/[0.08] pt-8">
+                    <article className="border-t border-line/10 pt-8">
                         <div className="flex flex-wrap items-baseline justify-between gap-3">
                             <h3 className="font-display text-3xl text-paper">Software Engineer</h3>
                             <p className="kicker">Jul 2024 — present</p>
@@ -101,7 +101,7 @@ const Resume = () => {
                         </button>
                     </article>
 
-                    <article className="mt-12 border-t border-white/[0.08] pt-8">
+                    <article className="mt-12 border-t border-line/10 pt-8">
                         <div className="flex flex-wrap items-baseline justify-between gap-3">
                             <h3 className="font-display text-3xl text-paper">B.Tech, Electronics &amp; Telecommunication</h3>
                             <p className="kicker">2020 — 2024</p>
@@ -125,7 +125,7 @@ const Resume = () => {
                     <p className="kicker mt-12">Marks</p>
                     <ul className="mt-6 space-y-3">
                         {marks.map((mark) => (
-                            <li key={mark} className="border-t border-white/[0.08] py-3 text-sm text-paper/85">
+                            <li key={mark} className="border-t border-line/10 py-3 text-sm text-paper/85">
                                 {mark}
                             </li>
                         ))}
