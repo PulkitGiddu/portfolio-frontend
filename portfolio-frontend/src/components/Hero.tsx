@@ -10,7 +10,7 @@ const Hero = () => {
     return (
         <section id="home" className="relative flex min-h-[100svh] items-end overflow-hidden">
             <Field className="absolute inset-0 h-full w-full" />
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,#080808_0%,rgba(8,8,8,0.78)_28%,rgba(8,8,8,0.18)_62%,rgba(8,8,8,0.55)_100%)]" />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgb(var(--c-ink))_0%,rgb(var(--c-ink)/0.78)_28%,rgb(var(--c-ink)/0.18)_62%,rgb(var(--c-ink)/0.55)_100%)]" />
 
             <div className="shell relative z-10 pb-14 pt-28 md:pb-20">
                 <motion.p
@@ -47,7 +47,7 @@ const Hero = () => {
                         <img
                             src={portrait}
                             alt="Pulkit Giddu"
-                            className="h-14 w-14 rounded-full object-cover grayscale"
+                            className="h-14 w-14 rounded-full object-cover"
                         />
                         <div>
                             <p className="text-sm text-paper">Open to a conversation</p>
