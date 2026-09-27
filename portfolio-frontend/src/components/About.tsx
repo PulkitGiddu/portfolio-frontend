@@ -27,7 +27,7 @@ const About = () => {
                 </p>
             </div>
 
-            <dl className="mt-16 grid gap-px overflow-hidden border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2 lg:grid-cols-4">
+            <dl className="mt-16 grid gap-px overflow-hidden border border-line/10 bg-line/10 sm:grid-cols-2 lg:grid-cols-4">
                 {practices.map((item, index) => (
                     <motion.div
                         key={item.name}
