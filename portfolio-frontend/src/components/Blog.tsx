@@ -179,7 +179,7 @@ const Blog = ({ className = '' }: BlogProps) => {
                 }
             >
                 {isLoading && (
-                    <div className="border-t border-white/[0.08] py-16">
+                    <div className="border-t border-line/10 py-16">
                         <p className="kicker">Opening the notebook</p>
                         <p className="mt-3 max-w-md text-sm leading-relaxed text-mute">
                             The server may take a moment on the first visit.
@@ -188,7 +188,7 @@ const Blog = ({ className = '' }: BlogProps) => {
                 )}
 
                 {!isLoading && waking && (
-                    <div className="border-t border-white/[0.08] py-12">
+                    <div className="border-t border-line/10 py-12">
                         <p className="text-paper">The notebook is waking up.</p>
                         <p className="mt-2 max-w-md text-sm leading-relaxed text-mute">
                             The server sleeps when no one is here. Refresh in a moment.
@@ -197,18 +197,18 @@ const Blog = ({ className = '' }: BlogProps) => {
                 )}
 
                 {!isLoading && !waking && visiblePosts.length === 0 && (
-                    <p className="border-t border-white/[0.08] py-12 text-mute">Nothing published yet.</p>
+                    <p className="border-t border-line/10 py-12 text-mute">Nothing published yet.</p>
                 )}
 
                 {!isLoading && visiblePosts.length > 0 && (
-                    <ul className="border-t border-white/[0.08]">
+                    <ul className="border-t border-line/10">
                         {visiblePosts.map((post, index) => (
                             <motion.li
                                 key={post.id}
                                 initial={{ opacity: 0, y: 12 }}
                                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                                 transition={{ delay: index * 0.06, duration: 0.6 }}
-                                className="border-b border-white/[0.08]"
+                                className="border-b border-line/10"
                             >
                                 <div className="group grid items-center gap-6 py-7 md:grid-cols-12">
                                     <button
@@ -272,7 +272,7 @@ const Blog = ({ className = '' }: BlogProps) => {
                             initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 12 }}
-                            className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto border border-white/[0.08] bg-ink p-8 md:p-12"
+                            className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto border border-line/10 bg-ink p-8 md:p-12"
                             onClick={(event) => event.stopPropagation()}
                         >
                             <button onClick={() => setSelectedPost(null)} className="absolute right-6 top-6 text-mute hover:text-paper" aria-label="Close">
