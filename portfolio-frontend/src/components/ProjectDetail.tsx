@@ -144,7 +144,7 @@ const ProjectDetail = () => {
                                     <p className="kicker">Stack</p>
                                     <p className="mt-4 text-paper/85">{essay.technologies.join('  ·  ')}</p>
                                 </div>
-                                <ul className="grid gap-px overflow-hidden border border-white/[0.08] bg-white/[0.08] md:col-span-12 md:grid-cols-3">
+                                <ul className="grid gap-px overflow-hidden border border-line/10 bg-line/10 md:col-span-12 md:grid-cols-3">
                                     {essay.results.map((result) => (
                                         <li key={result} className="bg-ink p-6 text-sm leading-relaxed text-paper/85">
                                             {result}
