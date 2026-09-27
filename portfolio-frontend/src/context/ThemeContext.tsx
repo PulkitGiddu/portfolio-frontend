@@ -9,18 +9,23 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const storedTheme = (): Theme => {
+    const saved = localStorage.getItem('theme');
+    return saved === 'light' ? 'light' : 'dark';
+};
+
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-    const [theme] = useState<Theme>('dark');
+    const [theme, setTheme] = useState<Theme>(storedTheme);
 
     useEffect(() => {
-        const root = window.document.documentElement;
-        root.classList.remove('light');
-        root.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-    }, []);
+        const root = document.documentElement;
+        root.classList.remove('light', 'dark');
+        root.classList.add(theme);
+        localStorage.setItem('theme', theme);
+    }, [theme]);
 
     const toggleTheme = () => {
-        /* The public site is a single black-and-grey theme. */
+        setTheme((current) => (current === 'dark' ? 'light' : 'dark'));
     };
 
     return (
