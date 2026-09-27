@@ -26,10 +26,10 @@ const Contact = () => {
                     <div className="lg:col-span-4 lg:sticky lg:top-24">
                         <p className="kicker">Contact</p>
                         <h2 className="mt-3 font-display text-[clamp(2.6rem,5vw,4.25rem)] leading-[0.95] text-paper">
-                            A short call.
+                            Book 15 minutes.
                         </h2>
                         <p className="mt-5 max-w-sm text-base leading-relaxed text-mute">
-                            Fifteen minutes. Bring a problem, a product, or nothing in particular.
+                            For a role, a product, or a question about the payment work.
                         </p>
                         <a
                             href="mailto:pulkitgiddu09@gmail.com"

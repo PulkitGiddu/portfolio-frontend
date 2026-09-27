@@ -38,25 +38,25 @@ export const FALLBACK_WORK: WorkItem[] = orderWork([
         title: 'Bookit',
         tags: 'Full stack',
         description:
-            'A meeting-room system for offices. Credits, roles, and a booking flow that refuses a double booking.',
+            'Office room booking. Credits, roles, and a flow that will not give the same room to two people.',
     },
     {
         id: 2,
         title: 'Bet2Learn',
         tags: 'Product',
-        description: '',
+        description: 'A learning product I built and shipped.',
     },
     {
         id: 3,
         title: 'SnatchMart',
         tags: 'Product',
-        description: '',
+        description: 'A commerce product I built and shipped.',
     },
     {
         id: 4,
         title: 'Wynklo',
         tags: 'Product',
-        description: 'Design, development, and delivery for websites and digital platforms.',
+        description: 'The product I am building now. Websites, apps, and digital platforms.',
     },
 ]);
 

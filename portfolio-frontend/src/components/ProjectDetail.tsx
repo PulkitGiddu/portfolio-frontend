@@ -8,13 +8,13 @@ import { mapProject, type WorkItem } from '../data/work';
 
 const BOOKIT_ESSAY = {
     challenge:
-        'A booking tool that stays fair when a whole office tries to grab the same room at once.',
+        'An office booking tool where many people can request the same room at once.',
     solution:
-        'A credit-based booking economy, role-based access, and a flow that refuses a double booking.',
+        'Credits, role-based access, and a flow that will not double-book a room.',
     results: [
-        'Clear roles for who can book, and who can override.',
-        'Concurrent requests resolved without two people owning one room.',
-        'A record of use, so the rooms stop being a rumour.',
+        'Roles for who can book, and who can override.',
+        'Concurrent requests resolved so two people do not own one room.',
+        'A record of who booked which room.',
     ],
     technologies: ['React', 'Spring Boot', 'PostgreSQL', 'AWS'],
 };

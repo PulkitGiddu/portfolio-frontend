@@ -162,7 +162,7 @@ const Blog = ({ className = '' }: BlogProps) => {
                 id="journal"
                 kicker="Journal"
                 title="Notes"
-                lede="Occasional writing on systems, products, and the work between them."
+                lede="Notes on payments, Spring services, and the products I build."
                 action={
                     <div className="flex items-center gap-5">
                         {isAdmin && (
@@ -189,9 +189,9 @@ const Blog = ({ className = '' }: BlogProps) => {
 
                 {!isLoading && waking && (
                     <div className="border-t border-line/10 py-12">
-                        <p className="text-paper">The notebook is waking up.</p>
+                        <p className="text-paper">The notes server is starting.</p>
                         <p className="mt-2 max-w-md text-sm leading-relaxed text-mute">
-                            The server sleeps when no one is here. Refresh in a moment.
+                            The host sleeps when it is idle. Refresh in a moment.
                         </p>
                     </div>
                 )}

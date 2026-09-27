@@ -40,7 +40,17 @@ const Hero = () => {
                     transition={{ duration: 0.9, delay: 0.22, ease }}
                 >
                     <p className="max-w-md text-lg font-light leading-relaxed text-paper/80">
-                        Bank systems by day. Products of my own after. I like software that stays calm when the load does not.
+                        I build payment systems at HSBC by day and my own products by choice — currently building{' '}
+                        <a
+                            href="https://www.wynklo.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-baseline gap-1 text-paper underline decoration-line/40 underline-offset-4 transition-colors hover:decoration-paper"
+                        >
+                            Wynklo
+                            <span aria-hidden="true">→</span>
+                        </a>
+                        .
                     </p>
 
                     <div className="flex items-center gap-4">

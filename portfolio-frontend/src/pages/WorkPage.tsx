@@ -17,10 +17,10 @@ const WorkPage = () => {
                 <section className="shell py-20 md:py-28">
                     <p className="kicker">Work</p>
                     <h1 className="mt-4 max-w-3xl font-display text-[clamp(3rem,7vw,6rem)] leading-[0.92] text-paper">
-                        Everything, in one list.
+                        The products.
                     </h1>
                     <p className="mt-6 max-w-md text-lg font-light leading-relaxed text-mute">
-                        The same index as the front page, without the cutoff.
+                        Wynklo, Bookit, SnatchMart, and Bet2Learn.
                     </p>
                     <div className="mt-16">
                         <WorkIndex />

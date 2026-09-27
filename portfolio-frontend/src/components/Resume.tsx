@@ -22,7 +22,7 @@ const skills = [
 
 const marks = [
     'Winner, CodeFury 2024 — HSBC India',
-    'Grand finalist, Hack The Winter 2026',
+    'Top 3, Hack The Winter 2026',
     'Secure Code Warrior — Yellow Belt',
     'Microservices with Spring Cloud',
     '350+ LeetCode problems',
@@ -37,8 +37,8 @@ const Resume = () => {
         <Frame
             id="resume"
             kicker="Record"
-            title="HSBC, and before that."
-            lede="Results-minded engineer. Java, Spring, and the unglamorous work of keeping a system up."
+            title="HSBC, then VIT."
+            lede="Software engineer at HSBC India since July 2024. Java, Spring Boot, and payment services."
             action={
                 <div className="flex items-center gap-5">
                     <button onClick={() => setViewerOpen(true)} className="text-left">
@@ -83,7 +83,7 @@ const Resume = () => {
                         </div>
                         <p className="mt-2 text-paper/80">HSBC India</p>
                         <p className="mt-5 max-w-xl text-sm leading-relaxed text-mute">
-                            Distributed microservices in Java and Spring Boot, powering financial workflows that have to stay fast and available.
+                            Java and Spring Boot services for payments, regulatory checks, and the tools that show whether those services are up.
                         </p>
                         <ul className="mt-6 space-y-3">
                             {shown.map((item) => (

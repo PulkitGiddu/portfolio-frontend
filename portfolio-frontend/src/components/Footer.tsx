@@ -70,7 +70,7 @@ const Footer = () => {
                     <a href="/#contact" className="max-w-md">
                         <p className="kicker">Stay in touch</p>
                         <p className="mt-3 font-display text-4xl leading-none text-paper md:text-5xl">
-                            Write, or take the fifteen minutes.
+                            Email, or book the 15 minutes.
                         </p>
                     </a>
                     <ul className="flex flex-wrap gap-x-6 gap-y-3">

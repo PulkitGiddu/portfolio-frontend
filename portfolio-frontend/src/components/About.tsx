@@ -2,10 +2,22 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Frame } from './ui';
 
 const practices = [
-    { name: 'Systems', detail: 'Java, Spring Boot, Kafka, Redis. Payments and the services around them.' },
-    { name: 'Product', detail: 'React and full-stack apps, from the first screen to the deploy.' },
-    { name: 'Data', detail: 'Oracle, Postgres, MySQL. The query you only notice when it is slow.' },
-    { name: 'Care', detail: 'Releases, incidents, and the dashboard that tells the truth.' },
+    {
+        name: 'Payments',
+        detail: 'Java, Spring Boot, Kafka and REST APIs. Building reliable services for high-throughput financial workflows.',
+    },
+    {
+        name: 'Products',
+        detail: 'Wynklo and independent products spanning commerce, booking and real-time applications.',
+    },
+    {
+        name: 'Systems',
+        detail: 'Distributed systems, PostgreSQL, Oracle, Redis and event-driven architectures built for scale.',
+    },
+    {
+        name: 'Production',
+        detail: 'Observability across 40+ environments, production debugging, CI/CD and zero-downtime releases.',
+    },
 ];
 
 const About = () => {
@@ -15,15 +27,24 @@ const About = () => {
         <Frame
             id="about"
             kicker="About"
-            title="Quiet systems. Clear interfaces."
-            lede="The interesting part is usually the failure you kept from happening."
+            title="Payments at HSBC. Products of my own."
+            lede="Software Engineer at HSBC, Pune — since July 2024."
         >
-            <div className="grid gap-8 md:grid-cols-2">
+            <div className="mt-10 grid gap-8 md:grid-cols-2">
                 <p className="text-lg font-light leading-relaxed text-paper/85">
-                    I&apos;m a software engineer at HSBC in Pune. I work on distributed services — payments, regulatory checks, and the tools that show whether they&apos;re healthy.
+                    At HSBC, I build distributed payment systems using Java, Spring Boot and event-driven architecture. My work spans payment processing, regulatory validation, production observability and the systems that keep critical financial services reliable.
                 </p>
                 <p className="text-lg font-light leading-relaxed text-mute">
-                    Alongside that I design and ship products: booking, learning, commerce. I like the work where the system and the screen are the same problem.
+                    Outside HSBC, I build products of my own. I&apos;m currently building{' '}
+                    <a
+                        href="https://www.wynklo.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-paper underline decoration-line/40 underline-offset-4 transition-colors hover:decoration-paper"
+                    >
+                        Wynklo
+                    </a>
+                    , alongside projects exploring real-time systems, commerce and scalable backend architecture.
                 </p>
             </div>
 

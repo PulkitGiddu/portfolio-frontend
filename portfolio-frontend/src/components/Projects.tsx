@@ -6,8 +6,9 @@ const Projects = () => {
     return (
         <Frame
             id="projects"
-            kicker="Work"
-            title="A few things I shipped."
+            kicker="Selected work"
+            title="Wynklo, then the other products."
+            lede="Wynklo is the product I'm building now. Bookit, SnatchMart and Bet2Learn sit beside it."
             action={
                 <Link to="/work">
                     <TextLink>All work</TextLink>
