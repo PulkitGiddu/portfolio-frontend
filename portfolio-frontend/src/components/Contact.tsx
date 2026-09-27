@@ -11,7 +11,7 @@ const Contact = () => {
         (async function () {
             const cal = await getCalApi();
             cal('ui', {
-                styles: { branding: { brandColor: '#e7e7e4' } },
+                styles: { branding: { brandColor: theme === 'dark' ? '#e7e7e4' : '#121211' } },
                 hideEventTypeDetails: false,
                 layout: 'month_view',
                 theme: theme,
@@ -20,7 +20,7 @@ const Contact = () => {
     }, [theme]);
 
     return (
-        <section id="contact" className="scroll-mt-24 border-t border-white/[0.08]">
+        <section id="contact" className="scroll-mt-24 border-t border-line/10">
             <div className="shell py-24 md:py-28">
                 <div className="grid items-start gap-12 lg:grid-cols-12">
                     <div className="lg:col-span-4 lg:sticky lg:top-24">
@@ -33,7 +33,7 @@ const Contact = () => {
                         </p>
                         <a
                             href="mailto:pulkitgiddu09@gmail.com"
-                            className="mt-8 inline-block text-lg text-paper underline decoration-white/25 underline-offset-4 transition-colors hover:decoration-paper"
+                            className="mt-8 inline-block text-lg text-paper underline decoration-line/30 underline-offset-4 transition-colors hover:decoration-paper"
                         >
                             pulkitgiddu09@gmail.com
                         </a>
@@ -47,7 +47,7 @@ const Contact = () => {
                         </div>
                     </div>
 
-                    <div className="min-h-[560px] overflow-hidden border border-white/[0.08] lg:col-span-8">
+                    <div className="min-h-[560px] overflow-hidden border border-line/10 lg:col-span-8">
                         <Cal
                             key={theme}
                             calLink="pulkit-giddu-c098j5/15min"
