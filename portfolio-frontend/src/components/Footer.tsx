@@ -64,7 +64,7 @@ const Footer = () => {
     });
 
     return (
-        <footer className="border-t border-white/[0.08]">
+        <footer className="border-t border-line/10">
             <div className="shell py-16 md:py-20">
                 <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
                     <a href="/#contact" className="max-w-md">
@@ -93,7 +93,7 @@ const Footer = () => {
                     Pulkit
                 </p>
 
-                <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/[0.08] pt-5">
+                <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line/10 pt-5">
                     <p className="kicker">© {now.getFullYear()} Pulkit Giddu</p>
                     <span className="kicker">{time} IST</span>
                     {views !== null && <span className="kicker">{views.toLocaleString()} visits</span>}
