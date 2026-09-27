@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 import { bindUiSounds, play, setSoundEnabled, soundEnabled } from '../lib/sound';
 
 const SECTIONS = ['home', 'about', 'projects', 'resume', 'journal', 'contact'] as const;
@@ -23,6 +24,7 @@ const SOCIALS = [
 const SiteNav = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { theme, toggleTheme } = useTheme();
     const [open, setOpen] = useState(false);
     const [soundOn, setSoundOn] = useState(true);
     const [active, setActive] = useState('home');
@@ -149,7 +151,7 @@ const SiteNav = () => {
             >
                 Skip to content
             </a>
-            <div className="border-b border-white/[0.08] bg-ink/75 backdrop-blur-md">
+            <div className="border-b border-line/10 bg-ink/75 backdrop-blur-md">
                 <div className="shell flex h-14 items-center justify-between gap-6">
                     <button
                         data-sound="none"
@@ -160,6 +162,18 @@ const SiteNav = () => {
                     </button>
 
                     <div className="flex items-center gap-4">
+                        <button
+                            data-sound="none"
+                            onClick={() => {
+                                toggleTheme();
+                                play('toggle');
+                            }}
+                            className="kicker transition-colors hover:text-paper"
+                            aria-pressed={theme === 'dark'}
+                            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+                        >
+                            {theme === 'dark' ? 'Light' : 'Dark'}
+                        </button>
                         <span className="kicker tabular-nums" aria-hidden="true">
                             {label}
                         </span>
