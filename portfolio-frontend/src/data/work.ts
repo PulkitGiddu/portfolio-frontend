@@ -7,7 +7,32 @@ export type WorkItem = {
     url?: string;
 };
 
-export const FALLBACK_WORK: WorkItem[] = [
+const PREVIEW_URLS: Record<string, string> = {
+    wynklo: 'https://www.wynklo.com/',
+};
+
+const WORK_ORDER = ['wynklo', 'bookit', 'snatchmart', 'bet2learn'];
+
+const compact = (title: string) => title.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+export function orderWork(items: WorkItem[]): WorkItem[] {
+    const rank = (title: string) => {
+        const key = compact(title);
+        const index = WORK_ORDER.findIndex((name) => key.includes(name));
+        return index === -1 ? WORK_ORDER.length : index;
+    };
+
+    return items
+        .map((item) => {
+            const key = compact(item.title);
+            const known = Object.entries(PREVIEW_URLS).find(([name]) => key.includes(name));
+            if (known && !item.url) return { ...item, url: known[1] };
+            return item;
+        })
+        .sort((a, b) => rank(a.title) - rank(b.title) || a.id - b.id);
+}
+
+export const FALLBACK_WORK: WorkItem[] = orderWork([
     {
         id: 1,
         title: 'Bookit',
@@ -31,9 +56,9 @@ export const FALLBACK_WORK: WorkItem[] = [
         id: 4,
         title: 'Wynklo',
         tags: 'Product',
-        description: '',
+        description: 'Design, development, and delivery for websites and digital platforms.',
     },
-];
+]);
 
 type ApiProject = {
     id?: number;
