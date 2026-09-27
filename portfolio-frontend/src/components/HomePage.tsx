@@ -1,4 +1,4 @@
-import FloatingNav from './FloatingNav';
+import SiteNav from './SiteNav';
 import Hero from './Hero';
 import About from './About';
 import Resume from './Resume';
@@ -11,13 +11,13 @@ import Footer from './Footer';
 const HomePage = () => {
     return (
         <>
-            <FloatingNav />
+            <SiteNav />
             <main>
                 <Hero />
                 <About />
-                <Resume />
                 <Projects />
                 <Clients />
+                <Resume />
                 <Blog />
                 <Contact />
             </main>

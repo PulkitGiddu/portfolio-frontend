@@ -1,156 +1,105 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ENDPOINTS } from '../config/api';
-import { FaInstagram, FaLinkedinIn, FaYoutube, FaGithub } from 'react-icons/fa6';
-import { HiOutlineMail } from 'react-icons/hi';
-import { SiLeetcode } from 'react-icons/si';
+
+type Social = {
+    name: string;
+    url: string;
+};
+
+const DEFAULT_SOCIALS: Social[] = [
+    { name: 'Email', url: 'mailto:pulkitgiddu09@gmail.com' },
+    { name: 'GitHub', url: 'https://github.com/PulkitGiddu' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/pulkit-giddu-223780206/' },
+    { name: 'LeetCode', url: 'https://leetcode.com/u/PulkitGiddu/' },
+    { name: 'Instagram', url: 'https://www.instagram.com/wynklo_tech/?hl=en' },
+];
+
+const NAME_TO_LABEL: Record<string, string> = {
+    gmail: 'Email',
+    email: 'Email',
+    github: 'GitHub',
+    linkedin: 'LinkedIn',
+    leetcode: 'LeetCode',
+    instagram: 'Instagram',
+    youtube: 'YouTube',
+};
 
 const Footer = () => {
-    const [currentTime, setCurrentTime] = useState(new Date());
-    const [socialLinks, setSocialLinks] = useState<any[]>([]);
-    const [viewCount, setViewCount] = useState<number | null>(null);
-
-    const iconMap: any = {
-        'HiOutlineMail': HiOutlineMail,
-        'FaInstagram': FaInstagram,
-        'FaLinkedinIn': FaLinkedinIn,
-        'FaYoutube': FaYoutube,
-        'FaGithub': FaGithub,
-        'SiLeetcode': SiLeetcode
-    };
-
-    const DEFAULT_SOCIALS = [
-        { name: 'Gmail', Icon: HiOutlineMail, url: 'mailto:pulkitgiddu09@gmail.com' },
-        { name: 'Instagram', Icon: FaInstagram, url: 'https://www.instagram.com/wynklo_tech/?hl=en' },
-        { name: 'LinkedIn', Icon: FaLinkedinIn, url: 'https://www.linkedin.com/in/pulkit-giddu-223780206/' },
-        { name: 'YouTube', Icon: FaYoutube, url: '' },
-        { name: 'GitHub', Icon: FaGithub, url: 'https://github.com/PulkitGiddu' },
-        { name: 'LeetCode', Icon: SiLeetcode, url: 'https://leetcode.com/u/PulkitGiddu/' },
-    ];
+    const [now, setNow] = useState(() => new Date());
+    const [socials, setSocials] = useState<Social[]>(DEFAULT_SOCIALS);
+    const [views, setViews] = useState<number | null>(null);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentTime(new Date());
-        }, 1000);
+        const timer = window.setInterval(() => setNow(new Date()), 1000);
 
-        // Fetch View Count
-        const fetchViewCount = async () => {
-            try {
-                const countRes = await fetch(ENDPOINTS.TRACKING_COUNT);
-                if (countRes.ok) {
-                    const count = await countRes.json();
-                    setViewCount(count);
-                }
-            } catch (error) {
-                console.error("View count fetch failed", error);
-            }
-        };
-        fetchViewCount();
-
-        // Fetch social links
-        fetch(ENDPOINTS.SOCIAL_LINKS)
-            .then(res => res.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    const mapped = data.map((link: any) => ({
-                        name: link.platformName,
-                        url: link.url,
-                        Icon: iconMap[link.iconName] || FaGithub
-                    }));
-                    setSocialLinks(mapped);
-                } else {
-                    setSocialLinks(DEFAULT_SOCIALS);
-                }
+        fetch(ENDPOINTS.TRACKING_COUNT)
+            .then((res) => (res.ok ? res.json() : null))
+            .then((count) => {
+                if (typeof count === 'number') setViews(count);
             })
-            .catch(err => {
-                console.error("Failed to fetch social links", err);
-                setSocialLinks(DEFAULT_SOCIALS);
-            });
+            .catch(() => undefined);
 
-        return () => clearInterval(timer);
+        fetch(ENDPOINTS.SOCIAL_LINKS)
+            .then((res) => res.json())
+            .then((data: { platformName?: string; url?: string }[]) => {
+                if (!Array.isArray(data) || data.length === 0) return;
+                const mapped = data
+                    .filter((link) => link.url)
+                    .map((link) => {
+                        const raw = (link.platformName || 'Link').trim();
+                        const label = NAME_TO_LABEL[raw.toLowerCase()] || raw;
+                        return { name: label, url: link.url as string };
+                    });
+                if (mapped.length > 0) setSocials(mapped);
+            })
+            .catch(() => undefined);
+
+        return () => window.clearInterval(timer);
     }, []);
 
-    const navLinks = [
-        { name: 'Home', href: '#home', count: '' },
-        { name: 'About', href: '#about', count: '' },
-        { name: 'Projects', href: '#projects', count: '(06)' },
-        { name: 'Journal', href: '#journal', count: '(05)' },
-        { name: 'Book a Call', href: '#contact', count: '' },
-    ];
-
-    const currentLinks = socialLinks.length > 0 ? socialLinks : DEFAULT_SOCIALS;
+    const time = now.toLocaleTimeString('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Asia/Kolkata',
+    });
 
     return (
-        <footer className="bg-cream-50 dark:bg-black text-black dark:text-white py-20 relative overflow-hidden transition-colors duration-300">
-            <div className="max-w-[1800px] mx-auto px-6 md:px-12 relative z-10">
-
-                {/* Top Section */}
-                <div className="grid md:grid-cols-2 gap-20 mb-32">
-
-                    {/* Left: Email CTA */}
-                    <div className="space-y-6">
-                        <p className="font-mono text-sm tracking-widest text-zinc-500 uppercase">
-                            STAY CONNECTED.
+        <footer className="border-t border-white/[0.08]">
+            <div className="shell py-16 md:py-20">
+                <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
+                    <a href="/#contact" className="max-w-md">
+                        <p className="kicker">Stay in touch</p>
+                        <p className="mt-3 font-display text-4xl leading-none text-paper md:text-5xl">
+                            Write, or take the fifteen minutes.
                         </p>
-                        <p className="text-zinc-600 dark:text-zinc-500 max-w-md text-sm leading-relaxed">
-                            Breaking boundaries to craft designs that stand out and deliver results. Blending creativity with strategy.
-                        </p>
-
-                        <div className="pt-8">
-                            <p className="text-zinc-600 text-xs">Made with Love by Pulkit.</p>
-                        </div>
-                    </div>
-
-                    {/* Right: Navigation & Socials */}
-                    <div className="flex flex-col md:flex-row gap-16 md:gap-32 w-full justify-end">
-                        {/* Nav */}
-                        <div>
-                            <ul className="space-y-4">
-                                {navLinks.map((link) => (
-                                    <li key={link.name}>
-                                        <a href={link.href} className="font-pixel text-xl md:text-2xl text-black dark:text-white hover:text-teal-600 dark:hover:text-teal-400 transition-colors flex items-start gap-1 group">
-                                            {link.name}
-                                            {link.count && <span className="text-xs text-zinc-500 dark:text-zinc-600 group-hover:text-teal-600 dark:group-hover:text-teal-500 font-mono -mt-1">{link.count}</span>}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Socials */}
-                        <div>
-                            <h3 className="font-pixel text-sm mb-6 text-zinc-500 uppercase">Social Media</h3>
-                            <div className="flex gap-4">
-                                {currentLinks.map((social) => (
-                                    <a
-                                        key={social.name}
-                                        href={social.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
-                                        title={social.name}
-                                    >
-                                        <social.Icon size={24} />
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                    </a>
+                    <ul className="flex flex-wrap gap-x-6 gap-y-3">
+                        {socials.map((social) => (
+                            <li key={social.name}>
+                                <a
+                                    href={social.url}
+                                    target={social.url.startsWith('mailto:') ? undefined : '_blank'}
+                                    rel="noopener noreferrer"
+                                    className="text-sm text-mute transition-colors duration-300 hover:text-paper"
+                                >
+                                    {social.name}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
 
-                {/* Copyright */}
-                <div className="text-center border-t border-zinc-200 dark:border-zinc-900 pt-8 pb-32 md:pb-8">
-                    <p className="text-zinc-500 dark:text-zinc-600 text-xs font-mono">
-                        © {currentTime.getFullYear()} PULKIT GIDDU. All rights reserved. •
-                        <span className="ml-2 opacity-50">{currentTime.toLocaleTimeString()} IST</span>
-                        <a href={ENDPOINTS.OAUTH2_GOOGLE} className="ml-4 opacity-50 hover:opacity-100 hover:text-teal-500 transition-opacity" title="Admin Login">
-                            Admin Access
-                        </a>
-                        {viewCount !== null && (
-                            <span className="ml-4 text-teal-500 font-mono text-xs border border-teal-500/30 px-2 py-0.5 rounded bg-teal-500/10">
-                                {viewCount.toLocaleString()} Views
-                            </span>
-                        )}
-                    </p>
+                <p className="mt-16 font-display text-[clamp(4.5rem,16vw,11rem)] leading-[0.8] tracking-[-0.045em] text-paper">
+                    Pulkit
+                </p>
+
+                <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/[0.08] pt-5">
+                    <p className="kicker">© {now.getFullYear()} Pulkit Giddu</p>
+                    <span className="kicker">{time} IST</span>
+                    {views !== null && <span className="kicker">{views.toLocaleString()} visits</span>}
+                    <a href={ENDPOINTS.OAUTH2_GOOGLE} className="kicker transition-colors hover:text-paper">
+                        Admin
+                    </a>
                 </div>
             </div>
         </footer>

@@ -1,269 +1,168 @@
-import { motion } from 'framer-motion';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import FloatingNav from './FloatingNav';
+import { Link, useParams } from 'react-router-dom';
+import SiteNav from './SiteNav';
+import Footer from './Footer';
+import { TextLink } from './ui';
+import { ENDPOINTS } from '../config/api';
+import { mapProject, type WorkItem } from '../data/work';
 
-interface Project {
-    id: number;
-    title: string;
-    category: string;
-    description: string;
-    image: string;
-    technologies: string[];
-    challenge: string;
-    solution: string;
-    results: string[];
-    gallery: string[];
-}
+const BOOKIT_ESSAY = {
+    challenge:
+        'A booking tool that stays fair when a whole office tries to grab the same room at once.',
+    solution:
+        'A credit-based booking economy, role-based access, and a flow that refuses a double booking.',
+    results: [
+        'Clear roles for who can book, and who can override.',
+        'Concurrent requests resolved without two people owning one room.',
+        'A record of use, so the rooms stop being a rumour.',
+    ],
+    technologies: ['React', 'Spring Boot', 'PostgreSQL', 'AWS'],
+};
+
+type Essay = typeof BOOKIT_ESSAY | null;
 
 const ProjectDetail = () => {
     const { id } = useParams();
-    const navigate = useNavigate();
-    const [project, setProject] = useState<Project | null>(null);
+    const [project, setProject] = useState<WorkItem | null>(null);
+    const [essay, setEssay] = useState<Essay>(null);
+    const [status, setStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
 
     useEffect(() => {
-        // Mock project data - replace with API call
-        const mockProjects: Project[] = [
-            {
-                id: 1,
-                title: 'BOOKIT',
-                category: 'FULL STACK DEVELOPMENT',
-                description: 'The Advanced Meeting Room Booking System is a centralized enterprise-grade platform designed to optimize office meeting room utilization. It introduces a credit-based booking economy combined with Role-Based Access Control (RBAC) to ensure fair usage, eliminate scheduling conflicts, and enforce accountability through an automated and professional workflow.',
-                image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200',
-                technologies: ['React.js', 'Springboot', 'PostgreSQL', 'AWS'],
-                challenge: 'Building a scalable product that could handle high traffic during office times while maintaining performance and managing office meeting rooms effectively.',
-                solution: 'Implemented microservices architecture with Redis caching, rate limiting, security and CDN integration for optimal performance.',
-                results: [
-                    '100% efficient resource usage in offices',
-                    'Provide clear role-based access and responsibilities',
-                    '99.9% uptime during peak usage',
-                    'Prevent double bookings and handle concurrent access safely'
-                ],
-                gallery: [
-                    'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800', // Meeting room
-                    'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800', // Conference
-                    'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800'  // Dashboard concept
-                ]
-            },
-            {
-                id: 2,
-                title: 'AI-Powered Analytics',
-                category: 'DATA SCIENCE',
-                description: 'Machine learning platform for predictive analytics and business intelligence.',
-                image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200',
-                technologies: ['Python', 'TensorFlow', 'React', 'PostgreSQL', 'Docker'],
-                challenge: 'Processing large datasets in real-time while providing actionable insights.',
-                solution: 'Developed custom ML models with distributed computing for real-time analysis.',
-                results: [
-                    'Reduced analysis time by 85%',
-                    'Improved prediction accuracy to 94%',
-                    'Processed 10M+ data points daily'
-                ],
-                gallery: [
-                    'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
-                    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800',
-                    'https://images.unsplash.com/photo-1557821552-17105176677c?w=800'
-                ]
-            }
-        ];
+        window.scrollTo(0, 0);
+        let cancelled = false;
 
-        const foundProject = mockProjects.find(p => p.id === Number(id));
-        setProject(foundProject || null);
+        fetch(ENDPOINTS.PROJECTS)
+            .then((res) => res.json())
+            .then((data: unknown) => {
+                if (cancelled) return;
+                const list = Array.isArray(data) ? data.map(mapProject) : [];
+                const found = list.find((item) => String(item.id) === String(id));
+                if (found) {
+                    setProject(found);
+                    setEssay(/bookit/i.test(found.title) ? BOOKIT_ESSAY : null);
+                    setStatus('ready');
+                    return;
+                }
+                if (String(id) === '1') {
+                    setProject({
+                        id: 1,
+                        title: 'Bookit',
+                        tags: 'Full stack',
+                        description:
+                            'A centralized booking platform for office rooms. Credits, roles, and a workflow that keeps one room from being promised twice.',
+                    });
+                    setEssay(BOOKIT_ESSAY);
+                    setStatus('ready');
+                    return;
+                }
+                setStatus('missing');
+            })
+            .catch(() => {
+                if (cancelled) return;
+                if (String(id) === '1') {
+                    setProject({
+                        id: 1,
+                        title: 'Bookit',
+                        tags: 'Full stack',
+                        description:
+                            'A centralized booking platform for office rooms. Credits, roles, and a workflow that keeps one room from being promised twice.',
+                    });
+                    setEssay(BOOKIT_ESSAY);
+                    setStatus('ready');
+                } else {
+                    setStatus('missing');
+                }
+            });
+
+        return () => {
+            cancelled = true;
+        };
     }, [id]);
 
-    if (!project) {
-        return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="text-white text-2xl">Project not found</div>
-            </div>
-        );
-    }
-
     return (
-        <div className="min-h-screen bg-black">
-            <FloatingNav />
-
-            {/* Hero Section */}
-            <motion.section
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
-                className="relative min-h-screen flex items-center justify-center overflow-hidden"
-            >
-                <div className="absolute inset-0">
-                    <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black"></div>
-                </div>
-
-                <div className="relative z-10 container mx-auto px-8 text-center">
-                    <motion.div
-                        initial={{ y: 30, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.3, duration: 0.8 }}
-                        className="space-y-6"
-                    >
-                        <p className="text-orange-500 text-sm font-mono tracking-widest">{project.category}</p>
-                        <h1 className="text-7xl md:text-9xl font-bold text-white font-mono tracking-tight">
-                            {project.title}
-                        </h1>
-                        <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                            {project.description}
-                        </p>
-                    </motion.div>
-                </div>
-
-                {/* Scroll Indicator */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1, duration: 0.8 }}
-                    className="absolute bottom-12 left-1/2 -translate-x-1/2"
-                >
-                    <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
-                        <motion.div
-                            animate={{ y: [0, 12, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
-                            className="w-1.5 h-1.5 bg-white rounded-full"
-                        />
+        <div className="min-h-screen bg-ink text-paper">
+            <SiteNav />
+            <main className="pt-14">
+                {status === 'loading' && (
+                    <div className="shell flex min-h-[50vh] items-center">
+                        <p className="kicker">Opening the project</p>
                     </div>
-                </motion.div>
-            </motion.section>
+                )}
 
-            {/* Technologies */}
-            <section className="py-24 px-8">
-                <div className="container mx-auto max-w-6xl">
-                    <motion.div
-                        initial={{ y: 30, opacity: 0 }}
-                        whileInView={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.8 }}
-                        viewport={{ once: true }}
-                    >
-                        <h2 className="text-4xl font-bold text-white font-mono mb-12">TECHNOLOGIES</h2>
-                        <div className="flex flex-wrap gap-4">
-                            {project.technologies.map((tech, index) => (
-                                <motion.div
-                                    key={tech}
-                                    initial={{ scale: 0.8, opacity: 0 }}
-                                    whileInView={{ scale: 1, opacity: 1 }}
-                                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                                    viewport={{ once: true }}
-                                    className="glass-card px-8 py-4 rounded-full"
-                                >
-                                    <span className="text-white font-mono text-lg">{tech}</span>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Challenge & Solution */}
-            <section className="py-24 px-8 bg-gradient-to-b from-transparent via-orange-500/5 to-transparent">
-                <div className="container mx-auto max-w-6xl">
-                    <div className="grid md:grid-cols-2 gap-12">
-                        <motion.div
-                            initial={{ x: -30, opacity: 0 }}
-                            whileInView={{ x: 0, opacity: 1 }}
-                            transition={{ duration: 0.8 }}
-                            viewport={{ once: true }}
-                            className="glass-card p-12 rounded-6xl"
-                        >
-                            <h3 className="text-3xl font-bold text-white font-mono mb-6">THE CHALLENGE</h3>
-                            <p className="text-gray-300 text-lg leading-relaxed">{project.challenge}</p>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ x: 30, opacity: 0 }}
-                            whileInView={{ x: 0, opacity: 1 }}
-                            transition={{ duration: 0.8 }}
-                            viewport={{ once: true }}
-                            className="glass-card p-12 rounded-6xl"
-                        >
-                            <h3 className="text-3xl font-bold text-white font-mono mb-6">THE SOLUTION</h3>
-                            <p className="text-gray-300 text-lg leading-relaxed">{project.solution}</p>
-                        </motion.div>
+                {status === 'missing' && (
+                    <div className="shell flex min-h-[60vh] flex-col justify-center">
+                        <h1 className="font-display text-5xl">This one isn’t written up yet.</h1>
+                        <Link to="/work" className="mt-8 w-fit">
+                            <TextLink>All work</TextLink>
+                        </Link>
                     </div>
-                </div>
-            </section>
+                )}
 
-            {/* Results */}
-            <section className="py-24 px-8">
-                <div className="container mx-auto max-w-6xl">
-                    <motion.div
-                        initial={{ y: 30, opacity: 0 }}
-                        whileInView={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.8 }}
-                        viewport={{ once: true }}
-                    >
-                        <h2 className="text-4xl font-bold text-white font-mono mb-12">RESULTS</h2>
-                        <div className="grid md:grid-cols-3 gap-8">
-                            {project.results.map((result, index) => (
-                                <motion.div
-                                    key={index}
-                                    initial={{ y: 30, opacity: 0 }}
-                                    whileInView={{ y: 0, opacity: 1 }}
-                                    transition={{ delay: index * 0.2, duration: 0.8 }}
-                                    viewport={{ once: true }}
-                                    className="glass-card p-8 rounded-6xl text-center"
-                                >
-                                    <div className="text-orange-500 text-5xl font-bold font-mono mb-4">✓</div>
-                                    <p className="text-white text-lg">{result}</p>
-                                </motion.div>
-                            ))}
+                {status === 'ready' && project && (
+                    <article>
+                        <header className="shell py-16 md:py-24">
+                            <Link to="/work" className="kicker transition-colors hover:text-paper">
+                                ← Work
+                            </Link>
+                            <p className="kicker mt-10">{project.tags}</p>
+                            <h1 className="mt-4 max-w-4xl font-display text-[clamp(3.2rem,8vw,7rem)] leading-[0.9] text-paper">
+                                {project.title}
+                            </h1>
+                            {project.description && (
+                                <p className="mt-8 max-w-2xl text-lg font-light leading-relaxed text-paper/80">
+                                    {project.description}
+                                </p>
+                            )}
+                            {project.url && (
+                                <a href={project.url} target="_blank" rel="noopener noreferrer" className="mt-8 inline-block">
+                                    <TextLink>Visit</TextLink>
+                                </a>
+                            )}
+                        </header>
+
+                        {project.image && (
+                            <div className="shell">
+                                <img
+                                    src={project.image}
+                                    alt={project.title}
+                                    className="max-h-[70vh] w-full object-cover saturate-[0.75]"
+                                />
+                            </div>
+                        )}
+
+                        {essay && (
+                            <div className="shell grid gap-16 py-20 md:grid-cols-12">
+                                <div className="md:col-span-6">
+                                    <p className="kicker">The problem</p>
+                                    <p className="mt-4 text-lg font-light leading-relaxed text-paper/85">{essay.challenge}</p>
+                                </div>
+                                <div className="md:col-span-6">
+                                    <p className="kicker">The approach</p>
+                                    <p className="mt-4 text-lg font-light leading-relaxed text-paper/85">{essay.solution}</p>
+                                </div>
+                                <div className="md:col-span-12">
+                                    <p className="kicker">Stack</p>
+                                    <p className="mt-4 text-paper/85">{essay.technologies.join('  ·  ')}</p>
+                                </div>
+                                <ul className="grid gap-px overflow-hidden border border-white/[0.08] bg-white/[0.08] md:col-span-12 md:grid-cols-3">
+                                    {essay.results.map((result) => (
+                                        <li key={result} className="bg-ink p-6 text-sm leading-relaxed text-paper/85">
+                                            {result}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+
+                        <div className="shell pb-20">
+                            <Link to="/work">
+                                <TextLink>All work</TextLink>
+                            </Link>
                         </div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Gallery */}
-            <section className="py-24 px-8">
-                <div className="container mx-auto max-w-6xl">
-                    <motion.div
-                        initial={{ y: 30, opacity: 0 }}
-                        whileInView={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.8 }}
-                        viewport={{ once: true }}
-                    >
-                        <h2 className="text-4xl font-bold text-white font-mono mb-12">GALLERY</h2>
-                        <div className="grid md:grid-cols-2 gap-8">
-                            {project.gallery.map((image, index) => (
-                                <motion.div
-                                    key={index}
-                                    initial={{ scale: 0.9, opacity: 0 }}
-                                    whileInView={{ scale: 1, opacity: 1 }}
-                                    transition={{ delay: index * 0.1, duration: 0.8 }}
-                                    viewport={{ once: true }}
-                                    className="rounded-6xl overflow-hidden aspect-video"
-                                >
-                                    <img
-                                        src={image}
-                                        alt={`${project.title} screenshot ${index + 1}`}
-                                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
-                                    />
-                                </motion.div>
-                            ))}
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Back to Projects */}
-            <section className="py-24 px-8">
-                <div className="container mx-auto max-w-6xl text-center">
-                    <motion.button
-                        onClick={() => navigate('/')}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-12 py-4 bg-white text-black rounded-full text-lg font-medium hover:bg-gray-100 transition-all duration-300"
-                    >
-                        ← BACK TO HOME
-                    </motion.button>
-                </div>
-            </section>
+                    </article>
+                )}
+            </main>
+            <Footer />
         </div>
     );
 };

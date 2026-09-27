@@ -27,7 +27,7 @@ function App() {
   }, [location]);
 
   return (
-    <div className="min-h-screen bg-black custom-scrollbar">
+    <div className="min-h-screen bg-ink text-paper custom-scrollbar">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/work" element={<WorkPage />} />

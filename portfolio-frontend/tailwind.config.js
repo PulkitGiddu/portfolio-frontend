@@ -39,10 +39,15 @@ export default {
                     500: '#8B2E2E',
                     600: '#732424',
                 },
+                ink: '#080808',
+                paper: '#e7e7e4',
+                mute: '#8f8f8b',
+                faint: '#5e5e5a',
             },
             fontFamily: {
-                mono: ['Space Mono', 'JetBrains Mono', 'monospace'],
-                sans: ['Inter', 'system-ui', 'sans-serif'],
+                display: ['Fraunces', 'Georgia', 'serif'],
+                mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
+                sans: ['Outfit', 'system-ui', 'sans-serif'],
             },
             borderRadius: {
                 '4xl': '2rem',

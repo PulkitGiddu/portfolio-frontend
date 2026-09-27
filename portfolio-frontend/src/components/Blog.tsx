@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaArrowRight, FaXmark as FaTimes, FaImage, FaPlus, FaPencil, FaTrash } from 'react-icons/fa6';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { FaXmark as FaTimes, FaPencil, FaTrash } from 'react-icons/fa6';
 import BlogForm from './BlogForm';
+import { Frame, TextLink } from './ui';
 import { ENDPOINTS, fetchWithCredentials } from '../config/api';
 import '../styles/editor.css';
 
@@ -23,17 +24,26 @@ interface BlogProps {
     className?: string;
 }
 
-const Blog = ({ className = "" }: BlogProps) => {
+const formatDate = (value?: string) => {
+    if (!value) return 'Draft';
+    return new Date(value).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+    });
+};
+
+const Blog = ({ className = '' }: BlogProps) => {
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: '-100px' });
+    const isInView = useInView(ref, { once: true, margin: '-80px' });
     const navigate = useNavigate();
+    const location = useLocation();
+    const onJournal = location.pathname === '/journal';
 
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [waking, setWaking] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-
-    // UI States
-    const [showAllPosts, setShowAllPosts] = useState(false);
     const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
     const [isCreating, setIsCreating] = useState(false);
     const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
@@ -61,20 +71,24 @@ const Blog = ({ className = "" }: BlogProps) => {
             if (res.ok) {
                 const data = await res.json();
                 setPosts(data);
+                setWaking(false);
+            } else {
+                setWaking(true);
             }
         } catch (error) {
             console.error('Failed to fetch blogs', error);
+            setWaking(true);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleCreatePost = async (data: any) => {
+    const handleCreatePost = async (data: Record<string, unknown>) => {
         try {
             const res = await fetchWithCredentials(ENDPOINTS.BLOGS, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
             });
 
             if (res.ok) {
@@ -91,101 +105,18 @@ const Blog = ({ className = "" }: BlogProps) => {
         }
     };
 
-    const visiblePosts = showAllPosts ? posts : posts.slice(0, 3);
-
-    // Modals
-    const ReadModal = () => (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedPost(null)}>
-            <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-white dark:bg-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl p-8 md:p-12 relative shadow-2xl"
-                onClick={e => e.stopPropagation()}
-            >
-                <button onClick={() => setSelectedPost(null)} className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                    <FaTimes className="text-xl text-gray-500" />
-                </button>
-
-                {selectedPost?.coverImageUrl && (
-                    <img src={selectedPost.coverImageUrl} alt={selectedPost.title} className="w-full h-64 md:h-80 object-cover rounded-2xl mb-8" />
-                )}
-
-                <div className="flex justify-between items-start mb-4">
-                    <span className="text-teal-500 text-sm font-mono tracking-wider block">
-                        {selectedPost?.tags?.toUpperCase() || 'JOURNAL'} • {selectedPost?.publishedAt ? new Date(selectedPost.publishedAt).toLocaleDateString() : 'DRAFT'}
-                    </span>
-
-                    {/* Admin Actions in Read Modal */}
-                    {isAdmin && selectedPost && (
-                        <div className="flex gap-2">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleEditClick(selectedPost);
-                                }}
-                                className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full hover:text-blue-500 transition-colors"
-                                title="Edit Article"
-                            >
-                                <FaPencil />
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDeletePost(selectedPost.id);
-                                }}
-                                className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full hover:text-red-500 transition-colors"
-                                title="Delete Article"
-                            >
-                                <FaTrash />
-                            </button>
-                        </div>
-                    )}
-                </div>
-
-                <h2 className="mono-heading text-4xl md:text-5xl mb-8 leading-tight text-black dark:text-white">
-                    {selectedPost?.title}
-                </h2>
-
-                <div
-                    className="article-content"
-                    dangerouslySetInnerHTML={{ __html: selectedPost?.content || '' }}
-                />
-            </motion.div>
-        </div>
-    );
-
-    const CreateModal = () => (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-                <BlogForm
-                    initialData={editingPost ? {
-                        ...editingPost,
-                        coverImageUrl: editingPost.coverImageUrl || '',
-                        published: editingPost.published ?? false
-                    } : undefined}
-                    onSubmit={editingPost ? (data) => handleUpdatePost(editingPost.id, data) : handleCreatePost}
-                    onCancel={() => {
-                        setIsCreating(false);
-                        setEditingPost(null);
-                    }}
-                />
-            </div>
-        </div>
-    );
-
     const handleEditClick = (post: BlogPost) => {
-        setSelectedPost(null); // Close read modal if open
+        setSelectedPost(null);
         setEditingPost(post);
-        setIsCreating(true); // Re-use create modal for editing
+        setIsCreating(true);
     };
 
-    const handleUpdatePost = async (id: number, data: any) => {
+    const handleUpdatePost = async (id: number, data: Record<string, unknown>) => {
         try {
             const res = await fetchWithCredentials(ENDPOINTS.BLOG_BY_ID(id), {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
             });
 
             if (res.ok) {
@@ -207,11 +138,11 @@ const Blog = ({ className = "" }: BlogProps) => {
 
         try {
             const res = await fetchWithCredentials(ENDPOINTS.BLOG_BY_ID(id), {
-                method: 'DELETE'
+                method: 'DELETE',
             });
 
             if (res.ok) {
-                setSelectedPost(null); // Close modal if open
+                setSelectedPost(null);
                 fetchPosts();
                 alert('Post deleted successfully');
             } else {
@@ -223,164 +154,100 @@ const Blog = ({ className = "" }: BlogProps) => {
         }
     };
 
+    const visiblePosts = onJournal ? posts : posts.slice(0, 4);
+
     return (
-        <section id="journal" className={`relative py-20 bg-cream-50 dark:bg-black ${className}`} ref={ref}>
-            <div className="section-container">
-                {/* Header */}
-                <div className="flex justify-between items-end mb-16">
-                    <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={isInView ? { opacity: 1, x: 0 } : {}}
-                        transition={{ duration: 1 }}
-                    >
-                        <p className="label-text text-gray-400 mb-4">THOUGHTS & INSIGHTS</p>
-                        <h2 className="mono-heading text-6xl md:text-7xl text-black dark:text-white leading-tight">
-                            THE
-                            <br />
-                            JOURNAL
-                        </h2>
-                    </motion.div>
-
-                    <div className="flex gap-4">
-                        <button
-                            onClick={() => setShowAllPosts(!showAllPosts)}
-                            className="btn-secondary hidden md:flex"
-                        >
-                            {showAllPosts ? 'SHOW LESS' : 'VIEW ALL ARTICLES'}
-                        </button>
+        <div className={className} ref={ref}>
+            <Frame
+                id="journal"
+                kicker="Journal"
+                title="Notes"
+                lede="Occasional writing on systems, products, and the work between them."
+                action={
+                    <div className="flex items-center gap-5">
+                        {isAdmin && (
+                            <button onClick={() => { setEditingPost(null); setIsCreating(true); }} className="text-left">
+                                <TextLink>New note</TextLink>
+                            </button>
+                        )}
+                        {!onJournal && posts.length > 4 && (
+                            <button onClick={() => navigate('/journal')} className="text-left">
+                                <TextLink>All notes</TextLink>
+                            </button>
+                        )}
                     </div>
-                </div>
-
-                {/* Loading State */}
+                }
+            >
                 {isLoading && (
-                    <div className="flex flex-col items-center justify-center py-24 px-4">
-                        {/* Pulsing dots animation */}
-                        <div className="flex gap-2 mb-8">
-                            {[0, 1, 2].map((i) => (
-                                <motion.div
-                                    key={i}
-                                    className="w-2.5 h-2.5 rounded-full bg-teal-500"
-                                    animate={{
-                                        scale: [1, 1.4, 1],
-                                        opacity: [0.4, 1, 0.4],
-                                    }}
-                                    transition={{
-                                        duration: 1.2,
-                                        repeat: Infinity,
-                                        delay: i * 0.2,
-                                        ease: 'easeInOut',
-                                    }}
-                                />
-                            ))}
-                        </div>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
-                            className="font-mono text-sm tracking-wider text-gray-500 dark:text-gray-400 uppercase mb-3"
-                        >
-                            Fetching latest blog entries
-                        </motion.p>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.3 }}
-                            className="text-gray-400 dark:text-gray-500 text-sm max-w-md text-center leading-relaxed"
-                        >
-                            Waking up the server — this may take a moment on the first visit. Hang tight!
-                        </motion.p>
+                    <div className="border-t border-white/[0.08] py-16">
+                        <p className="kicker">Opening the notebook</p>
+                        <p className="mt-3 max-w-md text-sm leading-relaxed text-mute">
+                            The server may take a moment on the first visit.
+                        </p>
                     </div>
                 )}
 
-                {/* Blog Grid */}
-                {!isLoading && (
-                    <div className="grid md:grid-cols-3 gap-8 mb-12">
-                        {/* Admin Add Card */}
-                        {isAdmin && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                                className="group cursor-pointer flex flex-col h-full min-h-[400px]"
-                                onClick={() => setIsCreating(true)}
-                            >
-                                <div className="flex-1 rounded-3xl bg-gradient-to-br from-orange-400 to-amber-700 flex items-center justify-center relative overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 group-hover:scale-[1.02]">
-                                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
-                                    {/* Decorative Circle */}
-                                    <div className="w-48 h-48 rounded-full bg-white/20 blur-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                {!isLoading && waking && (
+                    <div className="border-t border-white/[0.08] py-12">
+                        <p className="text-paper">The notebook is waking up.</p>
+                        <p className="mt-2 max-w-md text-sm leading-relaxed text-mute">
+                            The server sleeps when no one is here. Refresh in a moment.
+                        </p>
+                    </div>
+                )}
 
-                                    <div className="relative z-10 w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform duration-500">
-                                        <FaPlus className="text-3xl text-white" />
-                                    </div>
+                {!isLoading && !waking && visiblePosts.length === 0 && (
+                    <p className="border-t border-white/[0.08] py-12 text-mute">Nothing published yet.</p>
+                )}
 
-                                    <div className="absolute bottom-8 text-center w-full px-6">
-                                        <p className="text-white font-mono text-sm tracking-widest uppercase opacity-80 mb-2">Create New</p>
-                                        <h3 className="text-2xl font-bold text-white mono-heading">ENTRY</h3>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
-
+                {!isLoading && visiblePosts.length > 0 && (
+                    <ul className="border-t border-white/[0.08]">
                         {visiblePosts.map((post, index) => (
-                            <motion.div
+                            <motion.li
                                 key={post.id}
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={{ opacity: 0, y: 12 }}
                                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                                transition={{ delay: index * 0.1 + 0.2, duration: 0.8 }}
-                                className="group cursor-pointer flex flex-col h-full"
-                                onClick={() => navigate(`/journal/${post.slug}`)}
+                                transition={{ delay: index * 0.06, duration: 0.6 }}
+                                className="border-b border-white/[0.08]"
                             >
-                                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gray-200 dark:bg-gray-800 mb-6 relative">
-                                    {post.coverImageUrl ? (
-                                        <img
-                                            src={post.coverImageUrl}
-                                            alt={post.title}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                            <FaImage className="text-4xl opacity-20" />
-                                        </div>
-                                    )}
-                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                                </div>
-
-                                <div className="flex-1 flex flex-col">
-                                    <span className="text-teal-500 text-xs font-bold tracking-widest mb-3">
-                                        {post.tags?.split(',')[0] || 'JOURNAL'}
-                                    </span>
-                                    <h3 className="mono-heading text-2xl text-black dark:text-white mb-3 group-hover:text-teal-500 transition-colors">
-                                        {post.title}
-                                    </h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">
-                                        {post.summary}
-                                    </p>
-
-                                    <div className="mt-auto flex items-center justify-between">
-                                        <div className="flex items-center gap-2 text-sm font-medium text-black dark:text-white group-hover:gap-4 transition-all duration-300">
-                                            Read Article <FaArrowRight className="text-xs" />
-                                        </div>
-
-                                        {/* Admin Actions on Card */}
+                                <div className="group grid items-center gap-6 py-7 md:grid-cols-12">
+                                    <button
+                                        onClick={() => navigate(`/journal/${post.slug}`)}
+                                        className="text-left md:col-span-7"
+                                    >
+                                        <h3 className="font-display text-2xl text-paper transition-colors duration-300 group-hover:text-white md:text-3xl">
+                                            {post.title}
+                                        </h3>
+                                        {post.summary && (
+                                            <p className="mt-2 line-clamp-2 max-w-xl text-sm leading-relaxed text-mute">
+                                                {post.summary}
+                                            </p>
+                                        )}
+                                    </button>
+                                    <div className="flex items-center justify-between gap-4 md:col-span-3 md:flex-col md:items-start">
+                                        <p className="kicker">{post.tags?.split(',')[0]?.trim() || 'Note'}</p>
+                                        <p className="kicker">{formatDate(post.publishedAt)}</p>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-4 md:col-span-2 md:justify-end">
+                                        {post.coverImageUrl && (
+                                            <img
+                                                src={post.coverImageUrl}
+                                                alt=""
+                                                className="h-14 w-20 object-cover grayscale"
+                                            />
+                                        )}
                                         {isAdmin && (
                                             <div className="flex gap-2">
                                                 <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleEditClick(post);
-                                                    }}
-                                                    className="p-2 bg-gray-100 dark:bg-gray-700/50 rounded-full hover:bg-blue-100 hover:text-blue-600 transition-colors"
+                                                    onClick={() => handleEditClick(post)}
+                                                    className="p-2 text-mute transition-colors hover:text-paper"
                                                     title="Edit"
                                                 >
                                                     <FaPencil />
                                                 </button>
                                                 <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleDeletePost(post.id);
-                                                    }}
-                                                    className="p-2 bg-gray-100 dark:bg-gray-700/50 rounded-full hover:bg-red-100 hover:text-red-500 transition-colors"
+                                                    onClick={() => handleDeletePost(post.id)}
+                                                    className="p-2 text-mute transition-colors hover:text-paper"
                                                     title="Delete"
                                                 >
                                                     <FaTrash />
@@ -389,28 +256,56 @@ const Blog = ({ className = "" }: BlogProps) => {
                                         )}
                                     </div>
                                 </div>
-                            </motion.div>
+                            </motion.li>
                         ))}
+                    </ul>
+                )}
+            </Frame>
+
+            <AnimatePresence>
+                {selectedPost && (
+                    <div
+                        className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/80 p-4 backdrop-blur-sm"
+                        onClick={() => setSelectedPost(null)}
+                    >
+                        <motion.div
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 12 }}
+                            className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto border border-white/[0.08] bg-ink p-8 md:p-12"
+                            onClick={(event) => event.stopPropagation()}
+                        >
+                            <button onClick={() => setSelectedPost(null)} className="absolute right-6 top-6 text-mute hover:text-paper" aria-label="Close">
+                                <FaTimes />
+                            </button>
+                            <p className="kicker">
+                                {selectedPost.tags?.toUpperCase() || 'NOTE'} · {formatDate(selectedPost.publishedAt)}
+                            </p>
+                            <h2 className="mt-4 font-display text-4xl text-paper">{selectedPost.title}</h2>
+                            <div className="article-content mt-8" dangerouslySetInnerHTML={{ __html: selectedPost.content || '' }} />
+                        </motion.div>
                     </div>
                 )}
-
-                {/* Mobile View All Button */}
-                <div className="md:hidden text-center mt-8">
-                    <button
-                        onClick={() => setShowAllPosts(!showAllPosts)}
-                        className="btn-secondary w-full"
-                    >
-                        {showAllPosts ? 'SHOW LESS' : 'VIEW ALL ARTICLES'}
-                    </button>
-                </div>
-
-                {/* Animate Presence for Modals */}
-                <AnimatePresence>
-                    {selectedPost && <ReadModal key="read-modal" />}
-                    {isCreating && <CreateModal key="create-modal" />}
-                </AnimatePresence>
-            </div>
-        </section>
+                {isCreating && (
+                    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/80 p-4 backdrop-blur-sm">
+                        <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto">
+                            <BlogForm
+                                initialData={editingPost ? {
+                                    ...editingPost,
+                                    coverImageUrl: editingPost.coverImageUrl || '',
+                                    published: editingPost.published ?? false,
+                                } : undefined}
+                                onSubmit={editingPost ? (data) => handleUpdatePost(editingPost.id, data) : handleCreatePost}
+                                onCancel={() => {
+                                    setIsCreating(false);
+                                    setEditingPost(null);
+                                }}
+                            />
+                        </div>
+                    </div>
+                )}
+            </AnimatePresence>
+        </div>
     );
 };
 

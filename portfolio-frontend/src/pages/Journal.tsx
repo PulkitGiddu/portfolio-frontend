@@ -1,23 +1,14 @@
+import SiteNav from '../components/SiteNav';
 import Footer from '../components/Footer';
-import FloatingNav from '../components/FloatingNav';
 import Blog from '../components/Blog';
 
 const Journal = () => {
     return (
-        <div className="bg-cream-50 dark:bg-black min-h-screen">
-            <FloatingNav />
-
-            {/* Back Button */}
-            <div className="absolute top-8 left-8 z-20">
-                <a href="/" className="flex items-center gap-2 text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors font-mono text-sm group">
-                    <span className="group-hover:-translate-x-1 transition-transform">←</span> BACK TO PORTFOLIO
-                </a>
-            </div>
-
-            <main className="pt-0">
-                <Blog className="pt-46" />
+        <div className="min-h-screen bg-ink text-paper">
+            <SiteNav />
+            <main className="pt-14">
+                <Blog />
             </main>
-
             <Footer />
         </div>
     );

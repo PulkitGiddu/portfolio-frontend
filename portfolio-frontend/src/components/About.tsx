@@ -1,90 +1,48 @@
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
-import SnakeGame from './SnakeGame';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Frame } from './ui';
+
+const practices = [
+    { name: 'Systems', detail: 'Java, Spring Boot, Kafka, Redis. Payments and the services around them.' },
+    { name: 'Product', detail: 'React and full-stack apps, from the first screen to the deploy.' },
+    { name: 'Data', detail: 'Oracle, Postgres, MySQL. The query you only notice when it is slow.' },
+    { name: 'Care', detail: 'Releases, incidents, and the dashboard that tells the truth.' },
+];
 
 const About = () => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: '-100px' });
+    const reduce = useReducedMotion();
 
     return (
-        <section id="about" className="relative py-20 bg-cream-50 dark:bg-black overflow-hidden orange-glow" ref={ref}>
-            {/* Orange Glow Background */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-[800px] h-[800px] bg-orange-500/20 rounded-full blur-[150px]" />
+        <Frame
+            id="about"
+            kicker="About"
+            title="Quiet systems. Clear interfaces."
+            lede="The interesting part is usually the failure you kept from happening."
+        >
+            <div className="grid gap-8 md:grid-cols-2">
+                <p className="text-lg font-light leading-relaxed text-paper/85">
+                    I&apos;m a software engineer at HSBC in Pune. I work on distributed services — payments, regulatory checks, and the tools that show whether they&apos;re healthy.
+                </p>
+                <p className="text-lg font-light leading-relaxed text-mute">
+                    Alongside that I design and ship products: booking, learning, commerce. I like the work where the system and the screen are the same problem.
+                </p>
             </div>
 
-            <div className="section-container relative z-10">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
-                    {/* Left Side - Text Content */}
+            <dl className="mt-16 grid gap-px overflow-hidden border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2 lg:grid-cols-4">
+                {practices.map((item, index) => (
                     <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={isInView ? { opacity: 1, x: 0 } : {}}
-                        transition={{ duration: 1, ease: "easeOut" }}
-                        className="space-y-8"
+                        key={item.name}
+                        className="bg-ink p-6"
+                        initial={reduce ? false : { opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-40px' }}
+                        transition={{ duration: 0.6, delay: index * 0.06 }}
                     >
-                        <div>
-                            <h2 className="mono-heading text-6xl md:text-7xl text-black dark:text-white leading-tight">
-                                ABOUT
-                            </h2>
-                        </div>
-
-                        <div className="space-y-6 text-gray-600 dark:text-gray-300">
-                            <p className="text-lg leading-relaxed">
-                                I try to craft designs that don't just look stunning—they
-                                create impact. Blending creativity with strategy, I try to transform ideas
-                                into immersive digital experiences that captivate, engage, and connect.
-                            </p>
-                            <p className="text-lg leading-relaxed">
-                                With expertise in modern web technologies and a passion for innovation,
-                                I try to bring visions to life through clean, efficient code and thoughtful design.
-                            </p>
-                        </div>
-
-                        {/* Skills */}
-                        <div className="grid grid-cols-2 gap-6 pt-6">
-                            {[
-                                { name: 'Frontend', level: '95%' },
-                                { name: 'Backend', level: '90%' },
-                                { name: 'UI/UX', level: '85%' },
-                                { name: 'DevOps', level: '80%' },
-                            ].map((skill, index) => (
-                                <motion.div
-                                    key={skill.name}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                                    transition={{ delay: 0.6 + index * 0.1, duration: 0.8 }}
-                                    className="space-y-2"
-                                >
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-sm font-semibold text-black dark:text-white">{skill.name}</span>
-                                        <span className="text-sm text-gray-500">{skill.level}</span>
-                                    </div>
-                                    <div className="h-1 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            animate={isInView ? { width: skill.level } : {}}
-                                            transition={{ delay: 0.8 + index * 0.1, duration: 1.2, ease: "easeOut" }}
-                                            className="h-full bg-black dark:bg-white rounded-full"
-                                        />
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
+                        <dt className="font-display text-2xl text-paper">{item.name}</dt>
+                        <dd className="mt-3 text-sm leading-relaxed text-mute">{item.detail}</dd>
                     </motion.div>
-
-                    {/* Right Side - Image */}
-                    {/* Right Side - Interactive Game */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        animate={isInView ? { opacity: 1, x: 0 } : {}}
-                        transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
-                        className="relative h-full"
-                    >
-                        <SnakeGame />
-                    </motion.div>
-                </div>
-            </div>
-        </section>
+                ))}
+            </dl>
+        </Frame>
     );
 };
 

@@ -1,18 +1,17 @@
-import { motion, useInView } from 'framer-motion';
-import { useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import Cal, { getCalApi } from '@calcom/embed-react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 
 const Contact = () => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: '-100px' });
     const { theme } = useTheme();
+    const reduce = useReducedMotion();
 
     useEffect(() => {
         (async function () {
             const cal = await getCalApi();
             cal('ui', {
-                styles: { branding: { brandColor: '#14b8a6' } },
+                styles: { branding: { brandColor: '#e7e7e4' } },
                 hideEventTypeDetails: false,
                 layout: 'month_view',
                 theme: theme,
@@ -21,60 +20,41 @@ const Contact = () => {
     }, [theme]);
 
     return (
-        <section id="contact" className="relative py-24 bg-cream-50 dark:bg-black" ref={ref}>
-            <div className="section-container">
-                <div className="grid lg:grid-cols-[1fr_2fr] gap-16 items-start">
-                    {/* Left Side - Text */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 1 }}
-                        className="space-y-6"
-                    >
-                        <p className="label-text text-gray-400">LET'S CONNECT</p>
-
-                        <h2 className="mono-heading text-6xl md:text-7xl text-black dark:text-white leading-tight">
-                            BOOK A
-                            <br />
-                            CALL
+        <section id="contact" className="scroll-mt-24 border-t border-white/[0.08]">
+            <div className="shell py-24 md:py-28">
+                <div className="grid items-start gap-12 lg:grid-cols-12">
+                    <div className="lg:col-span-4 lg:sticky lg:top-24">
+                        <p className="kicker">Contact</p>
+                        <h2 className="mt-3 font-display text-[clamp(2.6rem,5vw,4.25rem)] leading-[0.95] text-paper">
+                            A short call.
                         </h2>
-
-                        <p className="text-lg text-gray-500 dark:text-gray-400 max-w-md leading-relaxed">
-                            Want to discuss a project, collaboration, or just have a quick chat?
-                            Pick a time that works for you and let's connect.
+                        <p className="mt-5 max-w-sm text-base leading-relaxed text-mute">
+                            Fifteen minutes. Bring a problem, a product, or nothing in particular.
                         </p>
-
-                        <div className="flex items-center gap-3 pt-4">
-                            <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
-                            <span className="text-sm font-mono text-gray-500 dark:text-gray-400">
-                                15 min · Video call
-                            </span>
+                        <a
+                            href="mailto:pulkitgiddu09@gmail.com"
+                            className="mt-8 inline-block text-lg text-paper underline decoration-white/25 underline-offset-4 transition-colors hover:decoration-paper"
+                        >
+                            pulkitgiddu09@gmail.com
+                        </a>
+                        <div className="mt-6 flex items-center gap-3">
+                            <motion.span
+                                className="inline-block h-1.5 w-1.5 rounded-full bg-paper"
+                                animate={reduce ? undefined : { opacity: [0.25, 1, 0.25] }}
+                                transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+                            />
+                            <span className="kicker">15 min · video</span>
                         </div>
-                    </motion.div>
+                    </div>
 
-                    {/* Right Side - Cal.com Embed */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ delay: 0.2, duration: 1 }}
-                        className="w-full min-h-[500px] rounded-2xl overflow-hidden"
-                    >
+                    <div className="min-h-[560px] overflow-hidden border border-white/[0.08] lg:col-span-8">
                         <Cal
                             key={theme}
                             calLink="pulkit-giddu-c098j5/15min"
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                overflow: 'scroll',
-                                minHeight: '500px',
-                                borderRadius: '16px',
-                            }}
-                            config={{
-                                layout: 'month_view',
-                                theme: theme,
-                            }}
+                            style={{ width: '100%', height: '100%', overflow: 'auto', minHeight: '560px' }}
+                            config={{ layout: 'month_view', theme }}
                         />
-                    </motion.div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -82,4 +62,3 @@ const Contact = () => {
 };
 
 export default Contact;
-

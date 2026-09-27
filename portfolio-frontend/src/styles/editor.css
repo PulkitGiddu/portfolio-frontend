@@ -426,21 +426,22 @@
 }
 
 .article-content a {
-    color: #0d9488;
+    color: #e7e7e4;
     text-decoration: underline;
+    text-decoration-color: rgba(231, 231, 228, 0.35);
     text-underline-offset: 3px;
 }
 
 .dark .article-content a {
-    color: #14b8a6;
+    color: #e7e7e4;
 }
 
 .article-content a:hover {
-    color: #14b8a6;
+    text-decoration-color: #e7e7e4;
 }
 
 .dark .article-content a:hover {
-    color: #2dd4bf;
+    color: #ffffff;
 }
 
 .article-content hr {
