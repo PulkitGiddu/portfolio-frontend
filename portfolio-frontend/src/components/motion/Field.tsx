@@ -84,7 +84,8 @@ const Field = ({ className = '' }: FieldProps) => {
 
                 const breath = still ? 0.5 : Math.sin(i * 0.8 + time) * 0.5 + 0.5;
                 const alpha = 0.1 + breath * 0.16;
-                ctx.strokeStyle = `rgba(214, 214, 210, ${alpha})`;
+                const tone = document.documentElement.classList.contains('light') ? '28, 28, 26' : '214, 214, 210';
+                ctx.strokeStyle = `rgba(${tone}, ${alpha})`;
                 ctx.lineWidth = i % 3 === 0 ? 1.15 : 0.7;
                 ctx.stroke();
             }
