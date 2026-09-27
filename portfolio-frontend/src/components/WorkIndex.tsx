@@ -1,8 +1,8 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ENDPOINTS } from '../config/api';
-import { FALLBACK_WORK, mapProject, type WorkItem } from '../data/work';
+import { FALLBACK_WORK, mapProject, orderWork, type WorkItem } from '../data/work';
 
 type WorkIndexProps = {
     limit?: number;
@@ -13,6 +13,7 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
     const [projects, setProjects] = useState<WorkItem[]>([]);
     const [ready, setReady] = useState(false);
     const [active, setActive] = useState(0);
+    const [embed, setEmbed] = useState<WorkItem | null>(null);
 
     useEffect(() => {
         let cancelled = false;
@@ -22,7 +23,7 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
             .then((data: unknown) => {
                 if (cancelled) return;
                 if (Array.isArray(data) && data.length > 0) {
-                    setProjects(data.map(mapProject));
+                    setProjects(orderWork(data.map(mapProject)));
                 } else {
                     setProjects(FALLBACK_WORK);
                 }
@@ -42,33 +43,53 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
     const visible = typeof limit === 'number' ? projects.slice(0, limit) : projects;
     const current = visible[active] ?? visible[0];
 
+    useEffect(() => {
+        if (!embed) return;
+        const previous = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setEmbed(null);
+        };
+        window.addEventListener('keydown', onKey);
+        return () => {
+            document.body.style.overflow = previous;
+            window.removeEventListener('keydown', onKey);
+        };
+    }, [embed]);
+
     return (
-        <div className="grid items-start gap-10 md:grid-cols-12">
+        <div className="grid items-start gap-10 md:grid-cols-12 md:items-stretch">
             <div className="md:col-span-7">
                 {!ready && (
-                    <div className="border-t border-white/[0.08]">
+                    <div className="border-t border-line/10">
                         {[0, 1, 2].map((row) => (
-                            <div key={row} className="border-b border-white/[0.08] py-7">
-                                <div className="h-7 w-40 animate-pulse bg-white/[0.06]" />
+                            <div key={row} className="border-b border-line/10 py-7">
+                                <div className="h-7 w-40 animate-pulse bg-line/10" />
                             </div>
                         ))}
                     </div>
                 )}
 
                 {ready && visible.length === 0 && (
-                    <p className="border-t border-white/[0.08] py-10 text-mute">Work will land here.</p>
+                    <p className="border-t border-line/10 py-10 text-mute">Work will land here.</p>
                 )}
 
                 {ready && visible.length > 0 && (
-                    <ol className="border-t border-white/[0.08]">
+                    <ol className="border-t border-line/10">
                         {visible.map((project, index) => {
                             const on = index === active;
                             return (
-                                <li key={project.id} className="border-b border-white/[0.08]">
+                                <li key={project.id} className="border-b border-line/10">
                                     <Link
-                                        to={`/project/${project.id}`}
+                                        to={project.url ? '#projects' : `/project/${project.id}`}
                                         onMouseEnter={() => setActive(index)}
                                         onFocus={() => setActive(index)}
+                                        onClick={(event) => {
+                                            if (!project.url) return;
+                                            event.preventDefault();
+                                            setActive(index);
+                                            setEmbed(project);
+                                        }}
                                         className="group grid grid-cols-[auto_1fr_auto] items-baseline gap-4 py-6 md:gap-8 md:py-7"
                                     >
                                         <span className="kicker tabular-nums">
@@ -105,8 +126,8 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
                 )}
             </div>
 
-            <div className="sticky top-24 hidden md:col-span-5 md:block">
-                <div className="relative aspect-[4/5] overflow-hidden bg-[#121212]">
+            <div className="md:col-span-5">
+                <div className="relative aspect-video overflow-hidden border border-line/10 bg-line/10 md:aspect-auto md:h-full">
                     <AnimatePresence mode="wait">
                         {current && (
                             <motion.div
@@ -117,7 +138,19 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
                                 exit={reduce ? undefined : { opacity: 0 }}
                                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                             >
-                                {current.image ? (
+                                {current.url ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => setEmbed(current)}
+                                        className="absolute inset-0 block text-left"
+                                        aria-label={`Open ${current.title} inside this site`}
+                                    >
+                                        <SiteFrame url={current.url} title={`${current.title} preview`} />
+                                        <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                                            <span className="kicker text-white/80">Live site · click to open</span>
+                                        </span>
+                                    </button>
+                                ) : current.image ? (
                                     <>
                                         <img
                                             src={current.image}
@@ -125,16 +158,16 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
                                             className="h-full w-full object-cover saturate-[0.72]"
                                         />
                                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6">
-                                            <p className="kicker">{current.tags}</p>
+                                            <p className="kicker text-white/80">{current.tags}</p>
                                             {current.description && (
-                                                <p className="mt-2 max-w-sm text-sm leading-relaxed text-paper/85">
+                                                <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/85">
                                                     {current.description}
                                                 </p>
                                             )}
                                         </div>
                                     </>
                                 ) : (
-                                    <div className="flex h-full flex-col bg-[radial-gradient(circle_at_70%_80%,#2a2a2a,transparent_55%),#121212] p-8">
+                                    <div className="flex h-full flex-col bg-[radial-gradient(circle_at_70%_80%,rgb(var(--c-line)/0.16),transparent_55%),rgb(var(--c-ink))] p-8">
                                         <p className="kicker">{current.tags}</p>
                                         <p className="mt-6 font-display text-5xl leading-[0.9] text-paper">{current.title}</p>
                                         {current.description && (
@@ -149,6 +182,65 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
                     </AnimatePresence>
                 </div>
             </div>
+
+            {embed?.url && (
+                <div className="fixed inset-0 z-[80] flex flex-col bg-ink">
+                    <div className="flex items-center justify-between gap-4 border-b border-line/10 px-6 py-4">
+                        <p className="text-sm text-paper">{embed.title}</p>
+                        <div className="flex items-center gap-5">
+                            <a
+                                href={embed.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-mute hover:text-paper"
+                            >
+                                Open site
+                            </a>
+                            <button type="button" onClick={() => setEmbed(null)} className="text-sm text-paper">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                    <iframe title={embed.title} src={embed.url} className="min-h-0 w-full flex-1 border-0 bg-white" />
+                </div>
+            )}
+        </div>
+    );
+};
+
+const PAGE_WIDTH = 1280;
+
+const SiteFrame = ({ url, title }: { url: string; title: string }) => {
+    const frame = useRef<HTMLDivElement>(null);
+    const [scale, setScale] = useState(0.3);
+    const [height, setHeight] = useState(800);
+
+    useEffect(() => {
+        const node = frame.current;
+        if (!node) return;
+
+        const measure = () => {
+            const rect = node.getBoundingClientRect();
+            const next = rect.width / PAGE_WIDTH;
+            setScale(next || 0.3);
+            setHeight(next ? rect.height / next : 800);
+        };
+
+        measure();
+        const observer = new ResizeObserver(measure);
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <div ref={frame} className="absolute inset-0 overflow-hidden bg-white">
+            <iframe
+                title={title}
+                src={url}
+                tabIndex={-1}
+                className="pointer-events-none absolute left-0 top-0 origin-top-left border-0"
+                style={{ width: PAGE_WIDTH, height, transform: `scale(${scale})` }}
+            />
         </div>
     );
 };
