@@ -11,7 +11,7 @@ type FrameProps = {
 
 export function Frame({ id, kicker, title, lede, action, children }: FrameProps) {
     return (
-        <section id={id} className="scroll-mt-24 border-t border-white/[0.08]">
+        <section id={id} className="scroll-mt-24 border-t border-line/10">
             <div className="shell py-24 md:py-28">
                 <div className="mb-12 md:mb-16">
                     <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
@@ -42,7 +42,7 @@ export function TextLink({
 }) {
     return (
         <span className={`group inline-flex items-center gap-2 text-sm text-paper ${className}`}>
-            <span className="border-b border-white/25 pb-0.5 transition-colors duration-300 group-hover:border-paper">
+            <span className="border-b border-line/30 pb-0.5 transition-colors duration-300 group-hover:border-paper">
                 {children}
             </span>
             <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5">
