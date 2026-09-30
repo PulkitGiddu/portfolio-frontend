@@ -56,7 +56,7 @@ const About = () => {
                         initial={reduce ? false : { opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: '-40px' }}
-                        transition={{ duration: 0.6, delay: index * 0.06 }}
+                        transition={reduce ? { duration: 0 } : { type: 'spring', bounce: 0, duration: 0.45, delay: index * 0.04 }}
                     >
                         <dt className="font-display text-2xl text-paper">{item.name}</dt>
                         <dd className="mt-3 text-sm leading-relaxed text-mute">{item.detail}</dd>

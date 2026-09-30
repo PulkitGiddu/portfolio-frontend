@@ -1,11 +1,9 @@
 import { useEffect } from 'react';
 import Cal, { getCalApi } from '@calcom/embed-react';
-import { motion, useReducedMotion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 
 const Contact = () => {
     const { theme } = useTheme();
-    const reduce = useReducedMotion();
 
     useEffect(() => {
         (async function () {
@@ -38,11 +36,7 @@ const Contact = () => {
                             pulkitgiddu09@gmail.com
                         </a>
                         <div className="mt-6 flex items-center gap-3">
-                            <motion.span
-                                className="inline-block h-1.5 w-1.5 rounded-full bg-paper"
-                                animate={reduce ? undefined : { opacity: [0.25, 1, 0.25] }}
-                                transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
-                            />
+                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-paper" />
                             <span className="kicker">15 min · video</span>
                         </div>
                     </div>

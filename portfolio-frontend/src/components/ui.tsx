@@ -42,10 +42,10 @@ export function TextLink({
 }) {
     return (
         <span className={`group inline-flex items-center gap-2 text-sm text-paper ${className}`}>
-            <span className="border-b border-line/30 pb-0.5 transition-colors duration-300 group-hover:border-paper">
+            <span className="border-b border-line/30 pb-0.5 transition-colors duration-150 group-hover:border-paper">
                 {children}
             </span>
-            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5">
+            <span aria-hidden="true" className="transition-transform duration-150 ease-out group-hover:translate-x-0.5">
                 →
             </span>
         </span>

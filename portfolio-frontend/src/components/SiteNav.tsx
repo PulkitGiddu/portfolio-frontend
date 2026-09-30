@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { bindUiSounds, play, setSoundEnabled, soundEnabled } from '../lib/sound';
@@ -25,11 +25,12 @@ const SiteNav = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { theme, toggleTheme } = useTheme();
+    const reduce = useReducedMotion();
     const [open, setOpen] = useState(false);
     const [soundOn, setSoundOn] = useState(true);
     const [active, setActive] = useState('home');
     const { scrollYProgress } = useScroll();
-    const scaleX = useSpring(scrollYProgress, { stiffness: 80, damping: 24, restDelta: 0.001 });
+    const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 22, mass: 1, restDelta: 0.001 });
 
     useEffect(() => {
         bindUiSounds();
@@ -151,7 +152,7 @@ const SiteNav = () => {
             >
                 Skip to content
             </a>
-            <div className="border-b border-line/10 bg-ink/75 backdrop-blur-md">
+            <div className="chrome">
                 <div className="shell flex h-14 items-center justify-between gap-6">
                     <button
                         data-sound="none"
@@ -179,9 +180,11 @@ const SiteNav = () => {
                         </span>
                         {!open && (
                             <motion.button
-                                layoutId="nav-menu"
+                                layoutId={reduce ? undefined : 'nav-menu'}
                                 data-sound="none"
                                 onClick={openMenu}
+                                whileTap={reduce ? undefined : { scale: 0.97 }}
+                                transition={{ type: 'spring', bounce: 0, duration: 0.28 }}
                                 className="inline-flex items-center gap-2 rounded-full bg-paper px-4 py-1.5 text-sm text-ink"
                                 aria-expanded={false}
                                 aria-label="Open menu"
@@ -204,6 +207,7 @@ const SiteNav = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
+                        transition={{ duration: reduce ? 0.12 : 0.22, ease: [0.22, 1, 0.36, 1] }}
                         onClick={closeMenu}
                     />
                 )}
@@ -212,18 +216,22 @@ const SiteNav = () => {
             <AnimatePresence>
                 {open && (
                     <motion.div
-                        layoutId="nav-menu"
+                        layoutId={reduce ? undefined : 'nav-menu'}
                         role="dialog"
                         aria-modal="true"
                         aria-label="Menu"
                         className="fixed right-3 top-3 z-[80] flex w-[min(34rem,calc(100vw-1.5rem))] flex-col overflow-y-auto bg-paper p-6 text-ink shadow-2xl sm:right-5 sm:top-5 sm:p-8"
-                        style={{ borderRadius: 28, maxHeight: 'calc(100dvh - 1.5rem)' }}
+                        style={{ borderRadius: 28, maxHeight: 'calc(100dvh - 1.5rem)', transformOrigin: 'top right' }}
+                        initial={reduce ? { opacity: 0 } : false}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: reduce ? 0.12 : 0.18 } }}
+                        transition={reduce ? { duration: 0.15 } : { type: 'spring', bounce: 0, duration: 0.4 }}
                     >
                         <div className="flex justify-end">
                             <button
                                 data-sound="none"
                                 onClick={closeMenu}
-                                className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-1.5 text-sm text-paper"
+                                className="press inline-flex items-center gap-2 rounded-full bg-ink px-4 py-1.5 text-sm text-paper"
                             >
                                 Close
                                 <span aria-hidden="true">×</span>

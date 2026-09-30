@@ -31,7 +31,9 @@
     color: rgb(var(--c-paper));
     font-family: 'Outfit', system-ui, sans-serif;
     font-weight: 400;
-    letter-spacing: -0.011em;
+    font-size: 100%;
+    line-height: 1.5;
+    letter-spacing: 0;
     overflow-x: hidden;
     text-rendering: optimizeLegibility;
   }
@@ -48,7 +50,12 @@
     font-family: 'Fraunces', Georgia, serif;
     font-optical-sizing: auto;
     font-weight: 500;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+
+  h1 {
+    letter-spacing: -0.045em;
   }
 
   section {
@@ -77,6 +84,28 @@
   .hairline {
     border-color: rgb(var(--c-line) / 0.1);
   }
+
+  .chrome {
+    background: rgb(var(--c-ink) / 0.72);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    backdrop-filter: blur(22px) saturate(160%);
+    box-shadow: inset 0 -1px 0 rgb(var(--c-line) / 0.14);
+  }
+
+  .press {
+    transition: transform 100ms ease-out;
+  }
+
+  .press:active {
+    transform: scale(0.97);
+  }
+}
+
+html.theme-shift,
+html.theme-shift * {
+  transition-property: background-color, color, border-color, outline-color, fill, stroke !important;
+  transition-duration: 280ms !important;
+  transition-timing-function: ease !important;
 }
 
 @layer utilities {
@@ -98,5 +127,26 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .press,
+  .press:active {
+    transition: none;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .chrome {
+    background: rgb(var(--c-ink));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .chrome {
+    background: rgb(var(--c-ink));
+    box-shadow: inset 0 -1px 0 rgb(var(--c-paper));
   }
 }

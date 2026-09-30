@@ -97,7 +97,7 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
                                         </span>
                                         <span>
                                             <span
-                                                className={`block font-display text-3xl leading-none transition-colors duration-300 md:text-4xl ${on ? 'text-paper' : 'text-mute group-hover:text-paper'}`}
+                                                className={`block font-display text-3xl leading-none tracking-[-0.03em] transition-colors duration-150 md:text-4xl ${on ? 'text-paper' : 'text-mute group-hover:text-paper'}`}
                                             >
                                                 {project.title}
                                             </span>
@@ -107,7 +107,7 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
                                         </span>
                                         <span
                                             aria-hidden="true"
-                                            className={`text-sm transition-all duration-300 ${on ? 'translate-x-0 text-paper opacity-100' : 'text-mute opacity-0 group-hover:opacity-100'}`}
+                                            className={`text-sm transition-opacity duration-150 ${on ? 'text-paper opacity-100' : 'text-mute opacity-0 group-hover:opacity-100'}`}
                                         >
                                             →
                                         </span>
@@ -136,7 +136,7 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
                                 initial={reduce ? false : { opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={reduce ? undefined : { opacity: 0 }}
-                                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                                transition={reduce ? { duration: 0.12 } : { duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                             >
                                 {current.url ? (
                                     <button
@@ -183,27 +183,35 @@ const WorkIndex = ({ limit }: WorkIndexProps) => {
                 </div>
             </div>
 
-            {embed?.url && (
-                <div className="fixed inset-0 z-[80] flex flex-col bg-ink">
-                    <div className="flex items-center justify-between gap-4 border-b border-line/10 px-6 py-4">
-                        <p className="text-sm text-paper">{embed.title}</p>
-                        <div className="flex items-center gap-5">
-                            <a
-                                href={embed.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-mute hover:text-paper"
-                            >
-                                Open site
-                            </a>
-                            <button type="button" onClick={() => setEmbed(null)} className="text-sm text-paper">
-                                Close
-                            </button>
+            <AnimatePresence>
+                {embed?.url && (
+                    <motion.div
+                        className="fixed inset-0 z-[80] flex flex-col bg-ink"
+                        initial={reduce ? false : { opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={reduce ? { duration: 0.12 } : { type: 'spring', bounce: 0, duration: 0.35 }}
+                    >
+                        <div className="chrome relative z-10 flex items-center justify-between gap-4 px-6 py-4">
+                            <p className="text-sm text-paper">{embed.title}</p>
+                            <div className="flex items-center gap-5">
+                                <a
+                                    href={embed.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm text-mute transition-colors duration-150 hover:text-paper"
+                                >
+                                    Open site
+                                </a>
+                                <button type="button" onClick={() => setEmbed(null)} className="press text-sm text-paper">
+                                    Close
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <iframe title={embed.title} src={embed.url} className="min-h-0 w-full flex-1 border-0 bg-white" />
-                </div>
-            )}
+                        <iframe title={embed.title} src={embed.url} className="min-h-0 w-full flex-1 border-0 bg-white" />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

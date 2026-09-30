@@ -5,8 +5,8 @@ type FieldProps = {
 };
 
 /**
- * A slow field of grey threads. The pointer bends the nearest lines,
- * the way a hand disturbs a surface of water.
+ * Grey threads that stay still until the pointer moves, then bend with it
+ * and settle back. Motion is a response, not a loop.
  */
 const Field = ({ className = '' }: FieldProps) => {
     const ref = useRef<HTMLCanvasElement>(null);
@@ -23,8 +23,10 @@ const Field = ({ className = '' }: FieldProps) => {
         const pointer = { x: 0, y: 0 };
         const mouse = { x: 0, y: 0 };
         let frame = 0;
-        let running = true;
+        let running = false;
         let time = 0;
+        let energy = 0;
+        let lastMove = 0;
 
         const resize = () => {
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -38,9 +40,10 @@ const Field = ({ className = '' }: FieldProps) => {
                 mouse.x = pointer.x;
                 mouse.y = pointer.y;
             }
+            draw();
         };
 
-        const draw = (still: boolean) => {
+        const draw = () => {
             const { width, height } = parent.getBoundingClientRect();
             ctx.clearRect(0, 0, width, height);
             ctx.lineCap = 'round';
@@ -48,13 +51,11 @@ const Field = ({ className = '' }: FieldProps) => {
 
             const lines = width < 720 ? 6 : 9;
             const segments = width < 720 ? 16 : 28;
-            const amp = Math.min(height * 0.045, 52);
+            const amp = Math.min(height * 0.045, 52) * (0.28 + energy * 0.72);
 
-            if (!still) {
-                mouse.x += (pointer.x - mouse.x) * 0.06;
-                mouse.y += (pointer.y - mouse.y) * 0.06;
-                time += 0.007;
-            }
+            mouse.x += (pointer.x - mouse.x) * 0.5;
+            mouse.y += (pointer.y - mouse.y) * 0.5;
+            if (energy > 0.002) time += 0.012 * energy;
 
             for (let i = 0; i < lines; i++) {
                 const baseY = (height / (lines + 1)) * (i + 1);
@@ -82,8 +83,8 @@ const Field = ({ className = '' }: FieldProps) => {
                     else ctx.lineTo(x, y);
                 }
 
-                const breath = still ? 0.5 : Math.sin(i * 0.8 + time) * 0.5 + 0.5;
-                const alpha = 0.1 + breath * 0.16;
+                const breath = 0.55 + Math.sin(i * 0.8) * 0.12 * (0.4 + energy);
+                const alpha = 0.12 + breath * 0.14;
                 const tone = document.documentElement.classList.contains('light') ? '28, 28, 26' : '214, 214, 210';
                 ctx.strokeStyle = `rgba(${tone}, ${alpha})`;
                 ctx.lineWidth = i % 3 === 0 ? 1.15 : 0.7;
@@ -91,9 +92,27 @@ const Field = ({ className = '' }: FieldProps) => {
             }
         };
 
+        const settled = () =>
+            energy < 0.02 &&
+            performance.now() - lastMove > 220 &&
+            Math.hypot(pointer.x - mouse.x, pointer.y - mouse.y) < 0.5;
+
         const loop = () => {
             if (!running) return;
-            draw(false);
+            const interacting = performance.now() - lastMove < 140;
+            energy += ((interacting ? 1 : 0) - energy) * 0.14;
+            draw();
+            if (settled()) {
+                running = false;
+                draw();
+                return;
+            }
+            frame = requestAnimationFrame(loop);
+        };
+
+        const wake = () => {
+            if (reduce || running) return;
+            running = true;
             frame = requestAnimationFrame(loop);
         };
 
@@ -101,16 +120,14 @@ const Field = ({ className = '' }: FieldProps) => {
             const rect = parent.getBoundingClientRect();
             pointer.x = event.clientX - rect.left;
             pointer.y = event.clientY - rect.top;
+            lastMove = performance.now();
+            wake();
         };
 
         const onVisibility = () => {
-            if (reduce) return;
-            if (document.hidden) {
+            if (reduce || document.hidden) {
                 running = false;
                 cancelAnimationFrame(frame);
-            } else if (!running) {
-                running = true;
-                frame = requestAnimationFrame(loop);
             }
         };
 
@@ -120,11 +137,7 @@ const Field = ({ className = '' }: FieldProps) => {
         parent.addEventListener('pointermove', onMove);
         document.addEventListener('visibilitychange', onVisibility);
 
-        if (reduce) {
-            draw(true);
-        } else {
-            frame = requestAnimationFrame(loop);
-        }
+        draw();
 
         return () => {
             running = false;

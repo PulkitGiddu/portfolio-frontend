@@ -25,6 +25,9 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     }, [theme]);
 
     const toggleTheme = () => {
+        const root = document.documentElement;
+        root.classList.add('theme-shift');
+        window.setTimeout(() => root.classList.remove('theme-shift'), 320);
         setTheme((current) => (current === 'dark' ? 'light' : 'dark'));
     };
 

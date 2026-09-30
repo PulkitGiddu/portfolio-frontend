@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import Field from './motion/Field';
 import portrait from '../assets/mine.png';
 
-const ease = [0.22, 1, 0.36, 1] as const;
+const enter = { type: 'spring' as const, bounce: 0, duration: 0.5 };
 
 const Hero = () => {
     const reduce = useReducedMotion();
@@ -17,16 +17,16 @@ const Hero = () => {
                     className="kicker"
                     initial={reduce ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease }}
+                    transition={reduce ? { duration: 0 } : enter}
                 >
                     Software engineer · Pune
                 </motion.p>
 
                 <motion.h1
                     className="mt-5 font-display text-[clamp(4.4rem,12vw,8.75rem)] leading-[0.86] text-paper"
-                    initial={reduce ? false : { opacity: 0, y: 18 }}
+                    initial={reduce ? false : { opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.08, ease }}
+                    transition={reduce ? { duration: 0 } : { ...enter, delay: 0.04 }}
                 >
                     Pulkit
                     <br />
@@ -35,9 +35,9 @@ const Hero = () => {
 
                 <motion.div
                     className="mt-10 flex flex-col gap-10 md:mt-14 md:flex-row md:items-end md:justify-between"
-                    initial={reduce ? false : { opacity: 0, y: 14 }}
+                    initial={reduce ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.9, delay: 0.22, ease }}
+                    transition={reduce ? { duration: 0 } : { ...enter, delay: 0.08 }}
                 >
                     <p className="max-w-md text-lg font-light leading-relaxed text-paper/80">
                         I build payment systems at HSBC by day and my own products by choice — currently building{' '}
@@ -69,11 +69,11 @@ const Hero = () => {
                 <div className="mt-10 flex items-center gap-8">
                     <a
                         href="#contact"
-                        className="rounded-full bg-paper px-5 py-2.5 text-sm text-ink transition-transform duration-300 hover:scale-[1.03]"
+                        className="press rounded-full bg-paper px-5 py-2.5 text-sm text-ink"
                     >
                         Book a call
                     </a>
-                    <a href="#projects" className="text-sm text-mute transition-colors duration-300 hover:text-paper">
+                    <a href="#projects" className="text-sm text-mute transition-colors duration-150 hover:text-paper">
                         Selected work
                     </a>
                 </div>
