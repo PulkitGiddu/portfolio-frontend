@@ -20,7 +20,7 @@ const WorkPage = () => {
                         The products.
                     </h1>
                     <p className="mt-6 max-w-md text-lg font-light leading-relaxed text-mute">
-                        Wynklo, Bookit, SnatchMart, and Bet2Learn.
+                        Wynklo, Clubmates, SnatchMart, and Bookit.
                     </p>
                     <div className="mt-16">
                         <WorkIndex />

@@ -9,9 +9,11 @@ export type WorkItem = {
 
 const PREVIEW_URLS: Record<string, string> = {
     wynklo: 'https://www.wynklo.com/',
+    clubmates: 'https://www.clubmates.in/',
+    snatchmart: 'https://www.snatchmart.com/',
 };
 
-const WORK_ORDER = ['wynklo', 'bookit', 'snatchmart', 'bet2learn'];
+const WORK_ORDER = ['wynklo', 'clubmates', 'snatchmart', 'bookit'];
 
 const compact = (title: string) => title.toLowerCase().replace(/[^a-z0-9]/g, '');
 
@@ -35,16 +37,16 @@ export function orderWork(items: WorkItem[]): WorkItem[] {
 export const FALLBACK_WORK: WorkItem[] = orderWork([
     {
         id: 1,
-        title: 'Bookit',
-        tags: 'Full stack',
-        description:
-            'Office room booking. Credits, roles, and a flow that will not give the same room to two people.',
+        title: 'Wynklo',
+        tags: 'Product',
+        description: 'The product I am building now. Websites, apps, and digital platforms.',
     },
     {
         id: 2,
-        title: 'Bet2Learn',
+        title: 'Clubmates',
         tags: 'Product',
-        description: 'A learning product I built and shipped.',
+        description:
+            'A nightlife social platform for finding people who want to go out, make plans and experience the night together.',
     },
     {
         id: 3,
@@ -54,9 +56,10 @@ export const FALLBACK_WORK: WorkItem[] = orderWork([
     },
     {
         id: 4,
-        title: 'Wynklo',
-        tags: 'Product',
-        description: 'The product I am building now. Websites, apps, and digital platforms.',
+        title: 'Bookit',
+        tags: 'Full stack',
+        description:
+            'Office room booking. Credits, roles, and a flow that will not give the same room to two people.',
     },
 ]);
 

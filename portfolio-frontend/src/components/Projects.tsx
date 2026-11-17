@@ -8,7 +8,7 @@ const Projects = () => {
             id="projects"
             kicker="Selected work"
             title="Wynklo, then the other products."
-            lede="Wynklo is the product I'm building now. Bookit, SnatchMart and Bet2Learn sit beside it."
+            lede="Wynklo is the product I'm building now. Clubmates, SnatchMart and Bookit sit beside it."
             action={
                 <Link to="/work">
                     <TextLink>All work</TextLink>

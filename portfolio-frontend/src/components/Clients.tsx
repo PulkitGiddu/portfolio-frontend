@@ -1,13 +1,13 @@
 import bookitLogo from '../assets/bookit.png';
-import bet2learnLogo from '../assets/bet2learn.png';
+import clubmatesLogo from '../assets/clubmates.png';
 import snatchMartLogo from '../assets/snatchMart.png';
 import wynkloLogo from '../assets/wynklo.png';
 
 const clients = [
     { name: 'Wynklo', logo: wynkloLogo },
-    { name: 'Bookit', logo: bookitLogo },
+    { name: 'Clubmates', logo: clubmatesLogo },
     { name: 'SnatchMart', logo: snatchMartLogo },
-    { name: 'Bet2Learn', logo: bet2learnLogo },
+    { name: 'Bookit', logo: bookitLogo },
 ];
 
 const services = [
